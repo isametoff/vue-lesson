@@ -1,15 +1,15 @@
 <template>
   <div>
-    <h1>Title</h1>
+    <h1>{{ productItem.title }}</h1>
     Back to products
     <hr />
     <div class="alert alert-success">
       price
-      {{ product }}
+      {{ productItem.price }}
     </div>
     <button
-      v-if="inCart(product.id)"
-      @click="remove(product.id)"
+      v-if="inCart($route.params.id)"
+      @click="remove($route.params.id)"
       type="button"
       class="btn btn-danger"
     >
@@ -17,7 +17,7 @@
     </button>
     <button
       v-else
-      @click="add(product.id)"
+      @click="add($route.params.id)"
       type="button"
       class="btn btn-success"
     >
@@ -31,7 +31,12 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   mounted() {
-    console.log(this.product)
+	this.productItem = this.product(this.$route.params.id)
+  },
+  data() {
+    return {
+      productItem: [],
+    };
   },
   computed: {
     ...mapGetters('products', ['product']),
