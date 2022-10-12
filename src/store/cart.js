@@ -9,7 +9,7 @@ export default {
     inCart: (state) => (id) => state.items.some((item) => item.id == id),
     length: (state) => state.items.length,
     oneProduct: (state) => (id) =>
-      state.items.find((item) => (item.id == id ? item : '')),
+      state.items.find((item) => (item.id == id ? item : 0)),
     // priceTotal: (state) => {
     //   return state.items.reduce((acc, price) => {
     //     return (total = acc + price);
@@ -51,7 +51,7 @@ export default {
         : commit('cartPlus', id);
     },
     cartMinus({ commit, getters }, id) {
-      getters.inCart(id) && getters.productCnt(id) < '2'
+      getters.inCart(id) && getters.productCnt(id) == 1
         ? commit('remove', id)
         : getters.inCart(id) && getters.productCnt(id) > '1'
         ? commit('cartMinus', id)

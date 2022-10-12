@@ -10,8 +10,9 @@
       {{ productItem.price }}
     </div>
 
+    <!-- :class="{ disabled: !isRest($route.params.id) }" -->
     <button
-      :class="{ disabled: productCnt < 1 || !isRest($route.params.id) }"
+      :class="{ disabled: cartCnt < 1, disabled: !isRest($route.params.id) }"
       @click="cartMinus($route.params.id)"
       type="button"
       class="btn btn-success m-1"
@@ -24,14 +25,19 @@
       v-model="cartCnt"
       type="number"
     />
+    <!-- disabled: !isRest($route.params.id), -->
     <button
-      :class="{ disabled: !isRest($route.params.id) }"
+      :class="{
+        disabled: !maxRest(cartProductItem) || !isRest(cartProductItem.id),
+      }"
       @click="cartPlus($route.params.id)"
       type="button"
       class="btn btn-success m-1"
     >
-      +</button
-    ><button
+      +
+    </button>
+
+    <button
       :class="{ disabled: !isRest($route.params.id) }"
       v-if="inCart($route.params.id)"
       @click="remove($route.params.id)"
@@ -58,24 +64,31 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   mounted() {
     // console.log(this.all) //Product
-    console.log(this.cartCnt);
     console.log(this.product(this.$route.params.id));
   },
   data() {
-    return {
-      // productItem: [],
-    };
+    return {};
   },
   computed: {
-    ...mapGetters('products', ['product', 'isRest']),
-    ...mapGetters('cart', ['inCart', 'productCnt']),
+    ...mapGetters('products', ['product', 'isRest', 'maxRest']),
+    ...mapGetters('cart', ['inCart', 'productCnt', 'oneProduct']),
     cartCnt() {
+      console.log(this.cartProductItem);
+      console.log(this.maxRest(this.cartProductItem));
+      console.log(this.oneProduct(this.$route.params.id));
+
       return this.productCnt(this.$route.params.id)
         ? this.productCnt(this.$route.params.id).cnt
         : 0;
     },
     productItem() {
+      console.log(this.productCnt(this.$route.params.id));
       return this.product(this.$route.params.id);
+    },
+    cartProductItem() {
+      return this.oneProduct(this.$route.params.id)
+        ? this.oneProduct(this.$route.params.id)
+        : 0;
     },
   },
   methods: {

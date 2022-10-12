@@ -10,7 +10,9 @@ export default {
       state.items.some((item) => item.id == id && item.rest > 0),
     maxRest: (state) => (itemCart) =>
       state.items.some(
-        (item) => item.id == itemCart.id && item.rest !== itemCart.cnt
+        (item) =>
+          (item.id == itemCart.id && item.rest !== itemCart.cnt) ||
+          itemCart == 0
       ),
   },
   mutations: {},
@@ -20,7 +22,7 @@ export default {
 function stub() {
   return [
     { id: 100, title: 'Ipnone 200', price: 12000, rest: 10 },
-    { id: 101, title: 'Samsung AAZ8', price: 22000, rest: 5 },
+    { id: 101, title: 'Samsung AAZ8', price: 22000, rest: 3 },
     { id: 103, title: 'Nokia 3310', price: 5000, rest: 0 },
     { id: 105, title: 'Huawei ZZ', price: 15000, rest: 8 },
   ];
