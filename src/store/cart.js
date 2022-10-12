@@ -42,8 +42,10 @@ export default {
         commit('remove', id);
       }
     },
-    cartPlus({ commit, getters }, id) {
-      !getters.inCart(id) ? commit('add', id) : commit('cartPlus', id);
+    cartPlus({ commit, getters, rootGetters }, id) {
+      rootGetters['products/isRest'](id) && !getters.inCart(id)
+        ? commit('add', id)
+        : commit('cartPlus', id);
     },
     cartMinus({ commit, getters }, id) {
       getters.productCnt(id) > 1

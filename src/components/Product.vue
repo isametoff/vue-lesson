@@ -3,6 +3,8 @@
     <h1>{{ productItem.title }}</h1>
     Back to products
     <hr />
+    <div>Quantity:{{ productItem.rest }}</div>
+    <hr />
     <div class="alert alert-success">
       price
       {{ productItem.price }}
@@ -24,7 +26,7 @@
     />
     <button
       :class="{ disabled: !isRest($route.params.id) }"
-      @click=" cartPlus($route.params.id)"
+      @click="cartPlus($route.params.id)"
       type="button"
       class="btn btn-success m-1"
     >
@@ -57,10 +59,11 @@ export default {
   mounted() {
     // console.log(this.all) //Product
     console.log(this.cartCnt);
+    console.log(this.product(this.$route.params.id));
   },
   data() {
     return {
-      productItem: [],
+      // productItem: [],
     };
   },
   computed: {
@@ -70,6 +73,9 @@ export default {
       return this.productCnt(this.$route.params.id)
         ? this.productCnt(this.$route.params.id).cnt
         : 0;
+    },
+    productItem() {
+      return this.product(this.$route.params.id);
     },
   },
   methods: {
