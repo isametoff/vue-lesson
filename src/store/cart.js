@@ -2,13 +2,14 @@ export default {
   namespaced: true,
   state: {
     items: [],
-    // total: [],
   },
   getters: {
     productCnt: (state) => (id) =>
       state.items.find((item) => (item.id == id ? item.cnt : '')),
     inCart: (state) => (id) => state.items.some((item) => item.id == id),
     length: (state) => state.items.length,
+    oneProduct: (state) => (id) =>
+      state.items.find((item) => (item.id == id ? item : '')),
     // priceTotal: (state) => {
     //   return state.items.reduce((acc, price) => {
     //     return (total = acc + price);
@@ -45,13 +46,15 @@ export default {
     cartPlus({ commit, getters, rootGetters }, id) {
       rootGetters['products/isRest'](id) && !getters.inCart(id)
         ? commit('add', id)
+        : !rootGetters['products/maxRest'](getters.oneProduct(id))
+        ? ''
         : commit('cartPlus', id);
     },
     cartMinus({ commit, getters }, id) {
-      getters.productCnt(id) > 1
-        ? commit('cartMinus', id)
-        : getters.inCart(id)
+      getters.inCart(id) && getters.productCnt(id) < '2'
         ? commit('remove', id)
+        : getters.inCart(id) && getters.productCnt(id) > '1'
+        ? commit('cartMinus', id)
         : '';
     },
   },

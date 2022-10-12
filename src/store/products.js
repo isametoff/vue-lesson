@@ -8,6 +8,10 @@ export default {
     product: (state) => (id) => state.items.find((item) => item.id == id),
     isRest: (state) => (id) =>
       state.items.some((item) => item.id == id && item.rest > 0),
+    maxRest: (state) => (itemCart) =>
+      state.items.some(
+        (item) => item.id == itemCart.id && item.rest !== itemCart.cnt
+      ),
   },
   mutations: {},
   actions: {},
