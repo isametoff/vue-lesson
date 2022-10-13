@@ -4,8 +4,6 @@ export default {
     items: [],
   },
   getters: {
-    productCnt: (state) => (id) =>
-      state.items.find((item) => (item.id == id ? item.cnt : '')),
     inCart: (state) => (id) => state.items.some((item) => item.id == id),
     length: (state) => state.items.length,
     oneProduct: (state) => (id) =>
@@ -24,12 +22,8 @@ export default {
     remove(state, id) {
       state.items = state.items.filter((item) => item.id != id);
     },
-    cartPlus(state, id) {
-      state.items.find((item) => (item.id == id ? item.cnt++ : ''));
-      // state.items[id].cnt += 1;
-    },
-    cartMinus(state, id) {
-      state.items.find((item) => (item.id == id ? item.cnt-- : ''));
+    setCnt(state, { id, cnt }) {
+      state.items.find((item) => (item.id == id ? (item.cnt = cnt) : ''));
     },
   },
   actions: {
@@ -43,19 +37,13 @@ export default {
         commit('remove', id);
       }
     },
-    cartPlus({ commit, getters, rootGetters }, id) {
-      rootGetters['products/isRest'](id) && !getters.inCart(id)
+    setCnt({ commit, getters, rootGetters }, { id, cnt }) {
+      console.log(getters.oneProduct(id), 'setCnt');
+      !getters.oneProduct(id)
         ? commit('add', id)
-        : !rootGetters['products/maxRest'](getters.oneProduct(id))
-        ? ''
-        : commit('cartPlus', id);
-    },
-    cartMinus({ commit, getters }, id) {
-      getters.inCart(id) && getters.productCnt(id) == 1
+        : cnt < 1
         ? commit('remove', id)
-        : getters.inCart(id) && getters.productCnt(id) > '1'
-        ? commit('cartMinus', id)
-        : '';
+        : commit('setCnt', { id, cnt });
     },
   },
 };

@@ -9,11 +9,9 @@
       price
       {{ productItem.price }}
     </div>
-
-    <!-- :class="{ disabled: !isRest($route.params.id) }" -->
     <button
-      :class="{ disabled: cartCnt < 1, disabled: !isRest($route.params.id) }"
-      @click="cartMinus($route.params.id)"
+      :class="{ disabled: cartCnt < 1 || !isRest($route.params.id) }"
+      @click="setCnt({ id: $route.params.id, cnt: cartCnt - 1 })"
       type="button"
       class="btn btn-success m-1"
     >
@@ -25,12 +23,19 @@
       v-model="cartCnt"
       type="number"
     />
-    <!-- disabled: !isRest($route.params.id), -->
     <button
-      :class="{
-        disabled: !maxRest(cartProductItem) || !isRest(cartProductItem.id),
-      }"
-      @click="cartPlus($route.params.id)"
+      v-if="cartProductItem"
+      :disabled="!maxRest(cartProductItem) || !isRest($route.params.id)"
+      @click="setCnt({ id: $route.params.id, cnt: cartCnt + 1 })"
+      type="button"
+      class="btn btn-success m-1"
+    >
+      +
+    </button>
+    <button
+      v-else
+      :disabled="!isRest($route.params.id)"
+      @click="setCnt({ id: $route.params.id, cnt: cartCnt + 1 })"
       type="button"
       class="btn btn-success m-1"
     >
@@ -64,7 +69,7 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   mounted() {
     // console.log(this.all) //Product
-    console.log(this.product(this.$route.params.id));
+    console.log(this.oneProduct(this.$route.params.id));
   },
   data() {
     return {};
@@ -73,16 +78,17 @@ export default {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
     ...mapGetters('cart', ['inCart', 'productCnt', 'oneProduct']),
     cartCnt() {
+      console.log(this.oneProduct(this.$route.params.id));
       console.log(this.cartProductItem);
       console.log(this.maxRest(this.cartProductItem));
       console.log(this.oneProduct(this.$route.params.id));
 
-      return this.productCnt(this.$route.params.id)
-        ? this.productCnt(this.$route.params.id).cnt
+      return this.oneProduct(this.$route.params.id)
+        ? this.oneProduct(this.$route.params.id)?.cnt
         : 0;
     },
     productItem() {
-      console.log(this.productCnt(this.$route.params.id));
+      console.log(this.oneProduct(this.$route.params.id)?.cnt);
       return this.product(this.$route.params.id);
     },
     cartProductItem() {
@@ -92,7 +98,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('cart', ['add', 'remove', 'cartPlus', 'cartMinus']),
+    ...mapActions('cart', ['add', 'remove', 'setCnt']),
   },
 };
 </script>

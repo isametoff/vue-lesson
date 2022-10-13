@@ -11,8 +11,7 @@ export default {
     maxRest: (state) => (itemCart) =>
       state.items.some(
         (item) =>
-          (item.id == itemCart.id && item.rest !== itemCart.cnt) ||
-          itemCart == 0
+          item.id == itemCart?.id && item?.rest !== itemCart?.cnt
       ),
   },
   mutations: {},
