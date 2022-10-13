@@ -16,23 +16,7 @@
               >Read more</router-link
             >
             <hr />
-            <button
-              v-if="inCart(pr.id)"
-              @click="remove(pr.id)"
-              type="button"
-              class="btn btn-danger"
-            >
-              Remove
-            </button>
-            <button
-              v-else
-              @click="add(pr.id, 1)"
-              type="button"
-              :class="{ disabled: !isRest(pr.id) }"
-              class="btn btn-success"
-            >
-              Add to cart
-            </button>
+            <product-controls :key="pr.id" :id="pr.id"></product-controls>
           </div>
         </div>
       </div>
@@ -42,10 +26,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import ProductControls from '@/components/ProductControls';
 
 export default {
-  mounted() {
-    // console.log(this.all) //ProductList
+  components: {
+    ProductControls,
   },
   computed: {
     ...mapGetters('products', { productList: 'all', isRest: 'isRest' }),

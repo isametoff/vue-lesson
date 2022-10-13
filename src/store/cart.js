@@ -39,7 +39,7 @@ export default {
         commit('remove', id);
       }
     },
-    setCnt({ commit, getters, rootGetters }, { id, cnt }) {
+    setCnt({ commit, getters}, { id, cnt }) {
       if (getters.inCart(id)) {
         var item = getters.itemsDetailed.find((item) => item.id == id);
         var validCnt = Math.min(Math.max(cnt, 1), item.rest);
@@ -48,7 +48,7 @@ export default {
         ? commit('add', id)
         : cnt < 1
         ? commit('remove', id)
-        : rootGetters['products/product'](id).rest >= cnt
+        : item.rest >= cnt
         ? commit('setCnt', { id, cnt: validCnt })
         : '';
     },

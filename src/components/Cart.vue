@@ -19,20 +19,7 @@
           <td>{{ pr.cnt }}</td>
           <td>{{ pr.price * pr.cnt }}</td>
           <td>
-            <button
-              :disabled="!isRest(pr.id)"
-              class="btn btn-warning me-1"
-              @click="setCnt({ id: pr.id, cnt: pr.cnt - 1 })"
-            >
-              -
-            </button>
-            <button
-              :disabled="maxtCnt"
-              class="btn btn-success"
-              @click="setCnt({ id: pr.id, cnt: pr.cnt + 1 })"
-            >
-              +
-            </button>
+            <product-controls :id="pr.id"></product-controls>
           </td>
         </tr>
       </tbody>
@@ -46,11 +33,18 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import ProductControls from '@/components/ProductControls';
 
 export default {
+  components: {
+    ProductControls,
+  },
   computed: {
     ...mapGetters('products', ['isRest', 'maxRest']),
-    ...mapGetters('cart', { products: 'itemsDetailed', oneProduct:'oneProduct' }),
+    ...mapGetters('cart', {
+      products: 'itemsDetailed',
+      oneProduct: 'oneProduct',
+    }),
     cartCnt() {
       return this.oneProduct(this.$route.params.id)
         ? this.oneProduct(this.$route.params.id)?.cnt
