@@ -8,12 +8,14 @@ export default {
     length: (state) => state.items.length,
     oneProduct: (state) => (id) =>
       state.items.find((item) => (item.id == id ? item : 0)),
-    // priceTotal: (state) => {
-    //   return state.items.reduce((acc, price) => {
-    //     return (total = acc + price);
-    //   }, 0);
-    // },
-    // total: (state, getter, rootState, rootGetters) rootGetters
+    itemsDetailed: (state, getters, rootState, rootGetters) => {
+      return state.items.map((item) => {
+        let product = rootGetters['products/product'](item.id);
+        return { ...product, cnt: item.cnt };
+      });
+    },
+    total: (state, getters) =>
+      getters.itemsDetailed.reduce((t, i) => t + i.price * i.cnt, 0),
   },
   mutations: {
     add(state, id) {
@@ -38,12 +40,17 @@ export default {
       }
     },
     setCnt({ commit, getters, rootGetters }, { id, cnt }) {
-      console.log(getters.oneProduct(id), 'setCnt');
-      !getters.oneProduct(id)
+      if (getters.inCart(id)) {
+        var item = getters.itemsDetailed.find((item) => item.id == id);
+        var validCnt = Math.min(Math.max(cnt, 1), item.rest);
+      }
+      !getters.inCart(id)
         ? commit('add', id)
         : cnt < 1
         ? commit('remove', id)
-        : commit('setCnt', { id, cnt });
+        : rootGetters['products/product'](id).rest >= cnt
+        ? commit('setCnt', { id, cnt: validCnt })
+        : '';
     },
   },
 };

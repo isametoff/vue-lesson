@@ -24,24 +24,13 @@
       type="number"
     />
     <button
-      v-if="cartProductItem"
-      :disabled="!maxRest(cartProductItem) || !isRest($route.params.id)"
+      :disabled="!maxtCnt"
       @click="setCnt({ id: $route.params.id, cnt: cartCnt + 1 })"
       type="button"
       class="btn btn-success m-1"
     >
       +
     </button>
-    <button
-      v-else
-      :disabled="!isRest($route.params.id)"
-      @click="setCnt({ id: $route.params.id, cnt: cartCnt + 1 })"
-      type="button"
-      class="btn btn-success m-1"
-    >
-      +
-    </button>
-
     <button
       :class="{ disabled: !isRest($route.params.id) }"
       v-if="inCart($route.params.id)"
@@ -68,8 +57,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   mounted() {
-    // console.log(this.all) //Product
-    console.log(this.oneProduct(this.$route.params.id));
+    //Product
   },
   data() {
     return {};
@@ -78,17 +66,14 @@ export default {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
     ...mapGetters('cart', ['inCart', 'productCnt', 'oneProduct']),
     cartCnt() {
-      console.log(this.oneProduct(this.$route.params.id));
-      console.log(this.cartProductItem);
-      console.log(this.maxRest(this.cartProductItem));
-      console.log(this.oneProduct(this.$route.params.id));
-
       return this.oneProduct(this.$route.params.id)
         ? this.oneProduct(this.$route.params.id)?.cnt
         : 0;
     },
+    maxtCnt() {
+      return this.maxRest(this.$route.params.id, this.cartCnt);
+    },
     productItem() {
-      console.log(this.oneProduct(this.$route.params.id)?.cnt);
       return this.product(this.$route.params.id);
     },
     cartProductItem() {

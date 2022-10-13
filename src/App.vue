@@ -8,8 +8,8 @@
           </div>
           <div class="col col-sm-3">
             <div class="alert alert-default">
-              <div>In Cart: {{ $store.getters['cart/length'] }}</div>
-              <!-- <div>In Cart: {{ priceTotal }}</div> -->
+              <div>In Cart: {{ length }}</div>
+              <div>In Cart: {{ total }}</div>
             </div>
           </div>
         </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
   mounted() {
@@ -59,9 +59,9 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters('cart', ['priceTotal', 'all']),
+    ...mapGetters('cart', ['priceTotal', 'all', 'total', 'length']),
   },
-}
+};
 </script>
 
 <style>
