@@ -1,11 +1,10 @@
-import { createApp } from "vue";
+import { createApp } from 'vue';
 import App from './App';
 import store from './store';
-import router from './router'
+import router from './router';
 
-createApp(App)
-.use(store)
-.use(router)
-.mount('#app');
+store.dispatch('products/getProducts').then(() => {
+  createApp(App).use(store).use(router).mount('#app');
+});
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';

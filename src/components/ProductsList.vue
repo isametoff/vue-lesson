@@ -10,13 +10,17 @@
         <div class="card">
           <div class="card-body">
             <h3>{{ pr.title }}</h3>
+            <h3>{{ pr.preview_image }}</h3>
+            <div class="inner">
+              <img :src="pr.preview_image" alt="" />
+            </div>
             <div>{{ pr.price }}</div>
-            <div>Quantity:{{ pr.rest }}</div>
+            <div>Quantity:{{ pr.count }}</div>
             <router-link :to="{ name: 'product', params: { id: pr.id } }"
               >Read more</router-link
             >
             <hr />
-            <product-controls :key="pr.id" :id="pr.id"></product-controls>
+            <product-controls :key="pr.id" :id="pr.id" />
           </div>
         </div>
       </div>

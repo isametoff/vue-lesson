@@ -31,7 +31,7 @@
   <transition>
     <input
       v-if="inCartProxy"
-      class="cnt_input m-1"
+      class="cnt_input"
       v-model="cartCnt"
       type="number"
     />
@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
-    ...mapGetters('cart', ['inCart', 'productCnt', 'oneProduct']),
+    ...mapGetters('cart', ['inCart', 'oneProduct']),
     cartCnt() {
       return this.oneProduct(this.id) ? this.oneProduct(this.id)?.cnt : 0;
     },
@@ -91,10 +91,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 .v-enter-active {
-  transition: opacity 0.9s ease;
+  transition: opacity 1s ease;
 }
 .v-leave-active {
-  transition: opacity 0.9s ease;
+  transition: opacity 1s ease;
 }
 
 .v-enter-from,

@@ -29,6 +29,7 @@ export default {
     },
   },
   actions: {
+    
     add({ commit, getters }, id) {
       if (!getters.inCart(id)) {
         commit('add', id);
@@ -39,16 +40,16 @@ export default {
         commit('remove', id);
       }
     },
-    setCnt({ commit, getters}, { id, cnt }) {
+    setCnt({ commit, getters }, { id, cnt }) {
       if (getters.inCart(id)) {
         var item = getters.itemsDetailed.find((item) => item.id == id);
-        var validCnt = Math.min(Math.max(cnt, 1), item.rest);
+        var validCnt = Math.min(Math.max(cnt, 1), item.count);
       }
       !getters.inCart(id)
         ? commit('add', id)
         : cnt < 1
         ? commit('remove', id)
-        : item.rest >= cnt
+        : item.count >= cnt
         ? commit('setCnt', { id, cnt: validCnt })
         : '';
     },

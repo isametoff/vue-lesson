@@ -9,7 +9,7 @@
           <div class="col col-sm-3">
             <div class="alert alert-default">
               <div>In Cart: {{ length }}</div>
-              <div>In Cart: {{ total }}</div>
+              <div>Total: {{ total }}</div>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters('cart', ['priceTotal', 'all', 'total', 'length']),
+    ...mapGetters('cart', ['priceTotal', 'total', 'length']),
   },
 };
 </script>

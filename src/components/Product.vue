@@ -3,8 +3,10 @@
     <h1>{{ productItem.title }}</h1>
     Back to products
     <hr />
-    <div>Quantity:{{ productItem.rest }}</div>
+    <div>Quantity:{{ productItem.count }}</div>
     <hr />
+    <p>Description:</p>
+    <div>{{ productItem.description }}</div>
     <div class="alert alert-success">
       price
       {{ productItem.price }}
@@ -23,7 +25,7 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
-    ...mapGetters('cart', ['inCart', 'productCnt', 'oneProduct']),
+    ...mapGetters('cart', ['inCart', 'oneProduct']),
     cartCnt() {
       return this.oneProduct(this.$route.params.id)
         ? this.oneProduct(this.$route.params.id)?.cnt
