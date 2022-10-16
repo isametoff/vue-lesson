@@ -8,9 +8,9 @@ export default {
     all: (state) => state.items,
     product: (state) => (id) => state.items.find((item) => item.id == id),
     isRest: (state) => (id) =>
-      state.items.some((item) => item.id == id && item.count > 0),
+      state.items.some((item) => item.id == id && item.rest > 0),
     maxRest: (state) => (id, cnt) =>
-      state.items.some((item) => item?.id == id && item.count > cnt),
+      state.items.some((item) => item?.id == id && item.rest > cnt),
   },
   mutations: {
     setItems(state, products) {
@@ -20,7 +20,7 @@ export default {
   actions: {
     async getProducts({ commit }) {
       try {
-        let res = await axios.get('http://127.0.0.1:8000/api/cart');
+        let res = await axios.get('http://127.0.0.1:8000/api/products');
         const products = await res.data.data;
         commit('setItems', products);
         console.log(res.data);

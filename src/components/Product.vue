@@ -3,7 +3,7 @@
     <h1>{{ productItem.title }}</h1>
     Back to products
     <hr />
-    <div>Quantity:{{ productItem.count }}</div>
+    <div>Quantity:{{ productItem.rest }}</div>
     <hr />
     <p>Description:</p>
     <div>{{ productItem.description }}</div>

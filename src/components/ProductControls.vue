@@ -1,15 +1,6 @@
 <template>
   <button
-    v-if="inCart(id)"
-    :disabled="!isRest(id)"
-    @click="remove(id)"
-    type="button"
-    class="btn btn-danger"
-  >
-    Remove
-  </button>
-  <button
-    v-else
+    v-if="!inCartProxy"
     :disabled="!isRest(id)"
     @click="add(id)"
     type="button"
@@ -17,36 +8,25 @@
   >
     Add to cart
   </button>
-  <transition>
-    <button
-      v-if="inCartProxy"
-      :disabled="cartCnt < 1 || !isRest(id)"
-      @click="setCnt({ id: id, cnt: cartCnt - 1 })"
-      type="button"
-      class="btn btn-success m-1"
-    >
-      -
-    </button>
-  </transition>
-  <transition>
-    <input
-      v-if="inCartProxy"
-      class="cnt_input"
-      v-model="cartCnt"
-      type="number"
-    />
-  </transition>
-  <transition>
-    <button
-      v-if="inCartProxy"
-      :disabled="!maxtCnt"
-      @click="setCnt({ id: id, cnt: cartCnt + 1 })"
-      type="button"
-      class="btn btn-success m-1"
-    >
-      +
-    </button>
-  </transition>
+  <button
+    v-if="inCartProxy"
+    :disabled="cartCnt < 1 || !isRest(id)"
+    @click="setCnt({ id: id, cnt: cartCnt - 1 })"
+    type="button"
+    class="btn btn-success m-1"
+  >
+    -
+  </button>
+  <input v-if="inCartProxy" class="cnt_input" v-model="cartCnt" type="number" />
+  <button
+    v-if="inCartProxy"
+    :disabled="!maxtCnt"
+    @click="setCnt({ id: id, cnt: cartCnt + 1 })"
+    type="button"
+    class="btn btn-success m-1"
+  >
+    +
+  </button>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';

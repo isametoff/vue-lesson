@@ -15,7 +15,7 @@
               <img :src="pr.preview_image" alt="" />
             </div>
             <div>{{ pr.price }}</div>
-            <div>Quantity:{{ pr.count }}</div>
+            <div>Quantity:{{ pr.rest }}</div>
             <router-link :to="{ name: 'product', params: { id: pr.id } }"
               >Read more</router-link
             >
