@@ -1,7 +1,10 @@
+const BASEURL = 'http://127.0.0.1:8000/api/cart';
+
 export default {
   namespaced: true,
   state: {
     items: [],
+    token: null,
   },
   getters: {
     inCart: (state) => (id) => state.items.some((item) => item.id == id),
@@ -18,6 +21,10 @@ export default {
       getters.itemsDetailed.reduce((t, i) => t + i.price * i.cnt, 0),
   },
   mutations: {
+    load(state, { cart, token }) {
+      state.items = cart;
+      state.token = token;
+    },
     add(state, id) {
       state.items.push({ id, cnt: 1 });
     },
@@ -29,7 +36,24 @@ export default {
     },
   },
   actions: {
-    
+    async load({ commit }) {
+      try {
+        let oldToken = localStorage.getItem('CART__TOKEN');
+        let res = await axios.get(`${BASEURL}`, { oldToken });
+        const { cart, token, needUpdate } = await res.data;
+
+        if (needUpdate) {
+          localStorage.setItem('CART__TOKEN', token);
+        }
+
+        commit('load', cart);
+        console.log(res.data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
+
     add({ commit, getters }, id) {
       if (!getters.inCart(id)) {
         commit('add', id);

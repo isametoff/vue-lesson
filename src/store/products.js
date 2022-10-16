@@ -1,3 +1,5 @@
+const BASEURL = 'http://127.0.0.1:8000/api/products';
+
 import axios from 'axios';
 export default {
   namespaced: true,
@@ -20,10 +22,10 @@ export default {
   actions: {
     async getProducts({ commit }) {
       try {
-        let res = await axios.get('http://127.0.0.1:8000/api/products');
-        const products = await res.data.data;
-        commit('setItems', products);
-        console.log(res.data);
+        let res = await axios.get(`${BASEURL}`);
+        let { products, produtsJson } = await res.data;
+        commit('setItems', produtsJson);
+        console.log(products);
       } catch (error) {
         alert(error);
         console.log(error);
