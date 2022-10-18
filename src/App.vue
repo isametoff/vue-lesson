@@ -9,7 +9,7 @@
           <div class="col col-sm-3">
             <div class="alert alert-default">
               <div>In Cart: {{ length }}</div>
-              <div>Total: {{ total }}</div>
+              <div>Total: {{ priceTotal }}</div>
             </div>
           </div>
         </div>
@@ -59,7 +59,10 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters('cart', ['priceTotal', 'total', 'length']),
+    ...mapGetters('cart', ['total', 'length', 'inCart']),
+    priceTotal() {
+      return this.inCart ? this.total : 0;
+    },
   },
 };
 </script>

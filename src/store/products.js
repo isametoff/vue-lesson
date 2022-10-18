@@ -23,8 +23,8 @@ export default {
     async getProducts({ commit }) {
       try {
         let res = await axios.get(`${BASEURL}`);
-        let { products, produtsJson } = await res.data;
-        commit('setItems', produtsJson);
+        let products = await res.data.data;
+        commit('setItems', products);
         console.log(products);
       } catch (error) {
         alert(error);

@@ -7,4 +7,6 @@ store.dispatch('products/getProducts').then(() => {
   createApp(App).use(store).use(router).mount('#app');
 });
 
+store.dispatch('cart/load');
+
 import 'bootstrap/dist/css/bootstrap.min.css';
