@@ -23,19 +23,17 @@ export default {
   },
   mutations: {
     load(state, { cart, token }) {
-      console.log(token);
-      console.log(state.cart, 'state.items-load-mutations-in');
-      console.log(state.token, 'token');
-      state.items.push(cart);
+      console.log(state.token, 'stateloadtoken');
+      console.log(state.items, 'stateloaditems');
+      state.items = cart;
       state.token = token;
-      console.log(state.cart, 'state.items-load-mutations-out');
-      console.log(state.token, 'token');
     },
     add(state, id) {
-      console.log(state.items, 'state.items-mutations');
+      console.log(state.items);
+      console.log(state.token);
       state.items.push({ id: id, cnt: 1 });
     },
-    remove(state, { id }) {
+    remove(state, id) {
       state.items = state.items.filter((item) => item.id != id);
     },
     setCnt(state, { id, cnt }) {
@@ -47,15 +45,15 @@ export default {
       try {
         let oldToken = localStorage.getItem('CART__TOKEN');
         let res = await axios.post(`${BASEURL}`, { oldToken });
-        let { cart, token, needUpdate } = res.data;
-        console.log(token, 'token');
-        console.log(cart, 'cart');
+        const { cart, token, needUpdate } = await res.data;
+        console.log({ token, needUpdate, cart }, 'loadtoken');
+        console.log(state.token, 'stateloadtoken');
+        console.log(state.items, 'stateloaditems');
 
         if (needUpdate) {
           localStorage.setItem('CART__TOKEN', token);
         }
-        cart ? commit('load', {token}) : '';
-        cart.id > 0 ? commit('load', {cart}) : '';
+        commit('load', { cart, token });
       } catch (error) {
         alert(error);
         console.log(error);
@@ -63,17 +61,18 @@ export default {
     },
 
     async add({ commit, getters, state }, id) {
-      // console.log(state.items, 'state.items-actions');
-      console.log(state.token, 'add');
+      console.log(state.items);
+      console.log(state.token);
 
       if (!getters.inCart(id)) {
         let response = await axios.post(`${BASEURL}/add`, {
-          token: state.token,
+          oldToken: state.token,
           id: id,
         });
-        let res = await response.data;
+        let addToData = await response.data;
+        console.log(addToData, 'addToData');
 
-        if (res) {
+        if (addToData) {
           commit('add', id);
         }
       }
@@ -81,34 +80,33 @@ export default {
     async remove({ commit, getters, state }, id) {
       if (getters.inCart(id)) {
         let response = await axios.post(`${BASEURL}/remove`, {
-          token: state.token,
+          oldToken: state.token,
           id: id,
         });
-        let res = await response.data;
+        let removeData = await response.data;
 
-        if (res) {
+        if (removeData) {
           commit('remove', id);
         }
       }
     },
     async setCnt({ commit, getters, state }, { id, cnt }) {
-      if (getters.inCart(id)) {
-        let response = await axios.post(`${BASEURL}/count`, {
-          token: state.token,
-          id: id,
-          cnt: cnt,
-        });
-        let res = await response.data;
-        var item = getters.itemsDetailed.find((item) => item.id == id);
-        var validCnt = Math.min(Math.max(cnt, 1), item.rest);
+      let response = await axios.post(`${BASEURL}/count`, {
+        oldToken: state.token,
+        id: id,
+        cnt: cnt,
+      });
+      let setData = await response.data;
+      var item = getters.itemsDetailed.find((item) => item.id == id);
+      if (setData) {
+        cnt < 1
+          ? commit('remove', id)
+          : !getters.inCart(id)
+          ? commit('add', id)
+          : item.rest >= cnt
+          ? commit('setCnt', { id: id, cnt: cnt })
+          : '';
       }
-      !getters.inCart(id)
-        ? commit('add', id)
-        : cnt < 1
-        ? commit('remove', id)
-        : item.rest >= cnt
-        ? commit('setCnt', { id, cnt: validCnt })
-        : '';
     },
   },
 };
