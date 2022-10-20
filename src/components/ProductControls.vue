@@ -1,8 +1,8 @@
 <template>
   <button
     v-if="!inCartProxy"
-    :disabled="!isRest(id)"
-    @click="add(id)"
+    :disabled="!isRest(id) && inProccessing"
+    @click="add({ id })"
     type="button"
     class="btn btn-success m-1"
   >
@@ -10,21 +10,21 @@
   </button>
   <button
     v-if="inCartProxy"
-    :disabled="cartCnt < 1 || !isRest(id)"
+    :disabled="cartCnt < 1 || !isRest(id) || inProccessing"
     @click="setCnt({ id: id, cnt: cartCnt - 1 })"
     type="button"
     class="btn btn-success m-1"
-  >
+  >{{inProccessing}}
     -
   </button>
   <input v-if="inCartProxy" class="cnt_input" v-model="cartCnt" type="number" />
   <button
     v-if="inCartProxy"
-    :disabled="!maxtCnt"
+    :disabled="!maxtCnt || inProccessing"
     @click="setCnt({ id: id, cnt: cartCnt + 1 })"
     type="button"
     class="btn btn-success m-1"
-  >
+  >{{inProccessing}}
     +
   </button>
 </template>
@@ -37,9 +37,12 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
-    ...mapGetters('cart', ['inCart', 'oneProduct']),
+    ...mapGetters('cart', ['inCart', 'oneProduct', 'inProccess']),
     cartCnt() {
       return this.oneProduct(this.id) ? this.oneProduct(this.id)?.cnt : 0;
+    },
+    inProccessing() {
+      return this.inProccess(this.id)
     },
     inCartProxy() {
       return this.inCart(this.id);

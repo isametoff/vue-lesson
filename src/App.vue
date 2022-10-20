@@ -8,7 +8,7 @@
           </div>
           <div class="col col-sm-3">
             <div class="alert alert-default">
-              <div>In Cart: {{ length }}</div>
+              <div>In Cart: {{ totalCnt }}</div>
               <div>Total: {{ priceTotal }}</div>
             </div>
           </div>
@@ -59,9 +59,9 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters('cart', ['total', 'length', 'inCart']),
+    ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
     priceTotal() {
-      return this.inCart ? this.total : 0;
+      return this.inCart ? this.totalSum : 0;
     },
   },
 };

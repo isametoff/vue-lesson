@@ -3,10 +3,11 @@ import App from './App';
 import store from './store';
 import router from './router';
 
-store.dispatch('products/getProducts').then(() => {
-  createApp(App).use(store).use(router).mount('#app');
-});
+let app = createApp(App).use(store).use(router);
 
 store.dispatch('cart/load');
+store.dispatch('products/load').then(() => {
+  app.mount('#app');
+});
 
 import 'bootstrap/dist/css/bootstrap.min.css';
