@@ -1,4 +1,7 @@
 <template>
+  <template v-for="(alltext, idx) in aletsAll" :key="idx">
+    {{ alltext.text }}<br />
+  </template>
   <div>
     <header>
       <div class="container">
@@ -14,38 +17,31 @@
           </div>
         </div>
         <hr />
+        <nav class="navbar navbar-expand p-0">
+          <ul class="navbar-nav">
+            <li v-for="item in menu" :key="item.route" class="nav-item ">
+              <router-link
+              class="m-1"
+                :to="{ name: item.route }"
+                exact-active-class="text-danger"
+                >{{ item.text }}
+              </router-link>
+            </li>
+          </ul>
+        </nav>
+        <hr />
       </div>
     </header>
     <section>
       <div class="container">
-        <div class="row">
-          <div class="col col-sm-3 menu">
-            <ul class="list-group">
-              <li
-                class="list-group-item"
-                v-for="item in menu"
-                :key="item.route"
-              >
-                <router-link
-                  :to="{ name: item.route }"
-                  exact-active-class="text-danger"
-                >
-                  {{ item.text }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
-          <div class="col col-sm-9">
-            <router-view />
-          </div>
-        </div>
+        <router-view />
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   mounted() {
@@ -60,9 +56,13 @@ export default {
   }),
   computed: {
     ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
+    ...mapGetters('alerts', { aletsAll: 'all' }),
     priceTotal() {
       return this.inCart ? this.totalSum : 0;
     },
+  },
+  methods: {
+    ...mapActions('alerts', ['remove']),
   },
 };
 </script>

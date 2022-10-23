@@ -16,8 +16,8 @@ export default {
     console.log(state.token, state.products);
   },
   async add({ state, getters, commit }, { id }) {
-    try {
-      if (getters.canAdd(id)) {
+    if (getters.canAdd(id)) {
+      try {
         commit('startProccess', id);
         console.log(state.proccessId, state.token, id);
 
@@ -29,11 +29,17 @@ export default {
         }
 
         commit('endProccess', id);
+      } catch (e) {
+        dispatch(
+          'alerts/add',
+          {
+            text: 'Ошибка ответа сервера при добавлении товара',
+          },
+          { root: false }
+        );
+      } finally {
+        commit('endProccess', id);
       }
-    } catch (error) {
-      alert(error);
-      commit('endProccess', id);
-      console.log(error);
     }
   },
   async remove({ state, getters, commit }, { id }) {

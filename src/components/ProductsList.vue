@@ -16,10 +16,10 @@
             </div>
             <div>{{ pr.price }}</div>
             <div>Quantity:{{ pr.rest }}</div>
-            <router-link :to="{ name: 'product', params: { id: pr.id } }"
-              >Read more</router-link
-            >
-            <hr />
+              <router-link :to="{ name: 'product', params: { id: pr.id } }"
+                >Read more
+              </router-link>
+            <hr/>
             <product-controls :key="pr.id" :id="pr.id" />
           </div>
         </div>

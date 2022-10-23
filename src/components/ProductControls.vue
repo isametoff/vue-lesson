@@ -1,7 +1,7 @@
 <template>
   <button
     v-if="!inCartProxy"
-    :disabled="!isRest(id) && inProccessing"
+    :disabled="!isRest(id) || inProccessing"
     @click="add({ id })"
     type="button"
     class="btn btn-success m-1"
