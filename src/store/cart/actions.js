@@ -1,7 +1,7 @@
 import * as cartApi from '@/api/cart.js';
 
 export default {
-  async load({ commit, state }) {
+  async load({ commit, dispatch }) {
     try {
       let savedToken = localStorage.getItem('cartToken');
       const { cart, token, needUpdate } = await cartApi.load(savedToken);
@@ -15,13 +15,15 @@ export default {
       dispatch(
         'alerts/add',
         {
-          text: 'Ошибка ответа корзины',
+          name: 'load',
+          text: 'Ошибка сервера',
+          update: true,
         },
-        { root: false }
+        { root: true }
       );
     }
   },
-  async add({ state, getters, commit }, { id }) {
+  async add({ state, getters, commit, dispatch, rootGetters }, { id }) {
     if (getters.canAdd(id)) {
       try {
         commit('startProccess', id);
@@ -37,9 +39,11 @@ export default {
         dispatch(
           'alerts/add',
           {
+            name: 'cartAdd',
             text: 'Ошибка ответа сервера при добавлении товара',
+            update: false,
           },
-          { root: false }
+          { root: true }
         );
       } finally {
         commit('endProccess', id);
@@ -87,7 +91,9 @@ export default {
         dispatch(
           'alerts/add',
           {
+            name: 'cartCnt',
             text: 'Ошибка ответа сервера при изменении количества товара',
+            update: false,
           },
           { root: true }
         );

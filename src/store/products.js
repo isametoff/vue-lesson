@@ -21,22 +21,27 @@ export default {
     },
   },
   actions: {
-    async load({ actions, getters, commit, state, dispatch }) {
+    async load({ getters, commit, dispatch }) {
       try {
         let response = await productsApi.all();
         if (response) {
           commit('setItems', response);
         }
-        // getters.notItems
-        //   ? setTimeout(() => {
-        //       load;
-        //     }, 5000)
-        //   : '';
+        // if (!getters.notItems) {
+        //   dispatch(
+        //     'alerts/cleare',
+        //     { name: 'products' },
+        //     {
+        //       root: true,
+        //     }
+        //   );
+        // }
       } catch (e) {
         dispatch(
           'alerts/add',
           {
-            text: 'Ошибка ответа сервера при получении товара',
+            name: 'load' ,
+            text: 'Ошибка сервера',
             update: true,
           },
           { root: true }

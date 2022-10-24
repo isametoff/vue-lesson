@@ -14,7 +14,7 @@
     @click="setCnt({ id: id, cnt: cartCnt - 1 })"
     type="button"
     class="btn btn-success m-1"
-  >{{inProccessing}}
+  >
     -
   </button>
   <input v-if="inCartProxy" class="cnt_input" v-model="cartCnt" type="number" />
@@ -24,7 +24,7 @@
     @click="setCnt({ id: id, cnt: cartCnt + 1 })"
     type="button"
     class="btn btn-success m-1"
-  >{{inProccessing}}
+  >
     +
   </button>
 </template>
