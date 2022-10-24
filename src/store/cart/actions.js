@@ -2,27 +2,31 @@ import * as cartApi from '@/api/cart.js';
 
 export default {
   async load({ commit, state }) {
-    let savedToken = localStorage.getItem('cartToken');
-    const { cart, token, needUpdate } = await cartApi.load(savedToken);
-    console.log({ cart, token, needUpdate });
-    console.log(state.token);
-    if (needUpdate) {
-      localStorage.setItem('cartToken', token);
-    }
-    console.log(state.token);
+    try {
+      let savedToken = localStorage.getItem('cartToken');
+      const { cart, token, needUpdate } = await cartApi.load(savedToken);
+      if (needUpdate) {
+        localStorage.setItem('cartToken', token);
+      }
 
-    commit('setToken', { token });
-    commit('setCart', { cart });
-    console.log(state.token, state.products);
+      commit('setToken', { token });
+      commit('setCart', { cart });
+    } catch (e) {
+      dispatch(
+        'alerts/add',
+        {
+          text: 'Ошибка ответа корзины',
+        },
+        { root: false }
+      );
+    }
   },
   async add({ state, getters, commit }, { id }) {
     if (getters.canAdd(id)) {
       try {
         commit('startProccess', id);
-        console.log(state.proccessId, state.token, id);
 
         let res = await cartApi.add(state.token, id);
-        console.log(res);
 
         if (res === true) {
           commit('add', { id });
