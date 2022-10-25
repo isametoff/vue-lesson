@@ -11,17 +11,19 @@ export async function add(token, id) {
     { oldToken: token, id: id },
     {
       errorAlert: 'при добавлении товара',
+      fixed: false,
     }
   );
   return data.addToData;
 }
 
-export async function remove(token, id) {
+export async function remove(token, id, rootGetters) {
   let { data } = await http.post(
     `cart/remove`,
     { oldToken: token, id: id },
     {
       errorAlert: 'при удалении товара',
+      fixed: false,
     }
   );
   return data;
@@ -33,6 +35,7 @@ export async function count(token, id, cnt) {
     { oldToken: token, id: id, cnt: cnt },
     {
       errorAlert: 'при изменении количества товара',
+      fixed: false,
     }
   );
   return data.setData;

@@ -1,5 +1,5 @@
 import * as productsApi from '@/api/products.js';
-import actions from './cart/actions';
+// import actions from './cart/actions';
 
 export default {
   namespaced: true,
@@ -21,31 +21,28 @@ export default {
     },
   },
   actions: {
-    async load({ getters, commit, dispatch }) {
+    async load({ state, getters, commit, dispatch }) {
       try {
         let response = await productsApi.all();
         if (response) {
           commit('setItems', response);
         }
-        // if (!getters.notItems) {
-        //   dispatch(
-        //     'alerts/cleare',
-        //     { name: 'products' },
-        //     {
-        //       root: true,
-        //     }
-        //   );
-        // }
+        if (!getters.notItems) {
+          dispatch('alerts/clear', '', {
+            root: true,
+          });
+        }
       } catch (e) {
-        dispatch(
-          'alerts/add',
-          {
-            name: 'load' ,
-            text: 'Ошибка сервера',
-            update: true,
-          },
-          { root: true }
-        );
+        if (getters.notItems) {
+          dispatch(
+            'alerts/add',
+            {
+              text: 'Ошибка сервера',
+              fixed: getters.notItems,
+            },
+            { root: true }
+          );
+        }
       }
     },
   },

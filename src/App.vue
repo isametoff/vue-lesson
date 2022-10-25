@@ -1,7 +1,5 @@
 <template>
-  <template v-for="(alltext, idx) in aletsAll" :key="idx">
-    {{ alltext.text }}<br />
-  </template>
+  <the-alerts />
   <div>
     <header>
       <div class="container">
@@ -42,11 +40,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TheAlerts from '@/components/Alerts';
 
 export default {
-  mounted() {
-    // console.log(this.all)
+  components: {
+    TheAlerts,
   },
+  mounted() {},
   data: () => ({
     menu: [
       { route: 'catalog', text: 'Products' },
@@ -56,7 +56,6 @@ export default {
   }),
   computed: {
     ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
-    ...mapGetters('alerts', { aletsAll: 'all' }),
   },
   methods: {},
 };

@@ -1,7 +1,7 @@
 import * as cartApi from '@/api/cart.js';
 
 export default {
-  async load({ commit, dispatch }) {
+  async load({ commit, dispatch, rootGetters }) {
     try {
       let savedToken = localStorage.getItem('cartToken');
       const { cart, token, needUpdate } = await cartApi.load(savedToken);
@@ -12,42 +12,43 @@ export default {
       commit('setToken', { token });
       commit('setCart', { cart });
     } catch (e) {
-      dispatch(
-        'alerts/add',
-        {
-          name: 'load',
-          text: 'Ошибка сервера',
-          update: true,
-        },
-        { root: true }
-      );
+      if (!rootGetters['products/notItems']) {
+        dispatch(
+          'alerts/add',
+          {
+            text: 'Ошибка сервера',
+            fixed: rootGetters['products/notItems'],
+          },
+          { root: true }
+        );
+      }
     }
   },
   async add({ state, getters, commit, dispatch, rootGetters }, { id }) {
     if (getters.canAdd(id)) {
-      try {
+      // try {
         commit('startProccess', id);
 
         let res = await cartApi.add(state.token, id);
 
         if (res === true) {
           commit('add', { id });
+          commit('endProccess', id);
         }
-
-        commit('endProccess', id);
-      } catch (e) {
-        dispatch(
-          'alerts/add',
-          {
-            name: 'cartAdd',
-            text: 'Ошибка ответа сервера при добавлении товара',
-            update: false,
-          },
-          { root: true }
-        );
-      } finally {
-        commit('endProccess', id);
-      }
+      // } catch (e) {
+      //   if (!rootGetters['products/notItems']) {
+      //     dispatch(
+      //       'alerts/add',
+      //       {
+      //         text: 'Ошибка ответа сервера при добавлении товара',
+      //         fixed: rootGetters['products/notItems'],
+      //       },
+      //       { root: true }
+      //     );
+      //   }
+      // } finally {
+      //   commit('endProccess', id);
+      // }
     }
   },
   async remove({ state, getters, commit }, { id }) {
@@ -59,7 +60,7 @@ export default {
         if (res === true) {
           commit('remove', { ind: getters.index(id) });
         }
-        setTimeout(commit('endProccess', { rid: id }), 10000);
+        setTimeout(commit('endProccess', { id: id }), 10000);
       }
     } catch (error) {
       commit('endProccess', id);
@@ -91,9 +92,8 @@ export default {
         dispatch(
           'alerts/add',
           {
-            name: 'cartCnt',
             text: 'Ошибка ответа сервера при изменении количества товара',
-            update: false,
+            fixed: rootGetters['products/notItems'],
           },
           { root: true }
         );
