@@ -1,55 +1,31 @@
 import * as cartApi from '@/api/cart.js';
 
 export default {
-  async load({ commit, dispatch, rootGetters }) {
-    try {
-      let savedToken = localStorage.getItem('cartToken');
-      const { cart, token, needUpdate } = await cartApi.load(savedToken);
-      if (needUpdate) {
-        localStorage.setItem('cartToken', token);
-      }
+  async load({ commit }) {
+    let oldToken = localStorage.getItem('cartToken');
+    let { cart, token, needUpdate } = await cartApi.load(oldToken);
 
-      commit('setToken', { token });
-      commit('setCart', { cart });
-    } catch (e) {
-      if (!rootGetters['products/notItems']) {
-        dispatch(
-          'alerts/add',
-          {
-            text: 'Ошибка сервера',
-            fixed: rootGetters['products/notItems'],
-          },
-          { root: true }
-        );
+    if (needUpdate) {
+      localStorage.setItem('cartToken', token);
+    }
+
+    commit('setToken', { token });
+    commit('setCart', { cart });
+  },
+  async add({ state, getters, commit }, { id }) {
+    if (getters.canAdd(id)) {
+      commit('startProccess', id);
+
+      let res = await cartApi.add(state.token, id);
+      // console.log(res.addToData);
+      if (res.addToData === true) {
+        commit('add', { id });
+        commit('endProccess', id);
       }
     }
   },
-  async add({ state, getters, commit, dispatch, rootGetters }, { id }) {
-    if (getters.canAdd(id)) {
-      // try {
-        commit('startProccess', id);
-
-        let res = await cartApi.add(state.token, id);
-
-        if (res === true) {
-          commit('add', { id });
-          commit('endProccess', id);
-        }
-      // } catch (e) {
-      //   if (!rootGetters['products/notItems']) {
-      //     dispatch(
-      //       'alerts/add',
-      //       {
-      //         text: 'Ошибка ответа сервера при добавлении товара',
-      //         fixed: rootGetters['products/notItems'],
-      //       },
-      //       { root: true }
-      //     );
-      //   }
-      // } finally {
-      //   commit('endProccess', id);
-      // }
-    }
+  async removeProsess({commit }, { id }) {
+    commit('endProccess', id);
   },
   async remove({ state, getters, commit }, { id }) {
     try {
@@ -72,32 +48,19 @@ export default {
     { id, cnt }
   ) {
     if (getters.canUpdate(id)) {
-      try {
-        commit('startProccess', id);
-        let res = false;
-        res = await cartApi.count(state.token, id, cnt);
+      commit('startProccess', id);
+      let res = false;
+      res = await cartApi.count(state.token, id, cnt);
 
-        if (res === true) {
-          let item = getters.productsDetailed.find(
-            (product) => product.id === id
-          );
-          cnt < 1
-            ? commit('remove', { ind: getters.index(id) })
-            : item.rest >= cnt
-            ? commit('setCnt', { id: id, cnt: cnt })
-            : '';
-          commit('endProccess', id);
-        }
-      } catch (e) {
-        dispatch(
-          'alerts/add',
-          {
-            text: 'Ошибка ответа сервера при изменении количества товара',
-            fixed: rootGetters['products/notItems'],
-          },
-          { root: true }
+      if (res === true) {
+        let item = getters.productsDetailed.find(
+          (product) => product.id === id
         );
-      } finally {
+        cnt < 1
+          ? commit('remove', { ind: getters.index(id) })
+          : item.rest >= cnt
+          ? commit('setCnt', { id: id, cnt: cnt })
+          : '';
         commit('endProccess', id);
       }
     }

@@ -1,29 +1,36 @@
 import http from '@/api/http';
 
 export async function load(token) {
-  let { data } = await http.post('cart', { oldToken: token });
+  let { data } = await http.post('cart', {
+    oldToken: token,
+    errorAlert: {
+      text: 'при получении товаров с корзины',
+      fixed: true,
+    },
+  });
   return data;
 }
 
 export async function add(token, id) {
   let { data } = await http.post(
     `cart/add`,
-    { oldToken: token, id: id },
+    { oldToken: token, id },
     {
-      errorAlert: 'при добавлении товара',
-      fixed: false,
+      errorAlert: {
+        text: 'при добавлении товара',
+        fixed: false,
+      },
     }
   );
-  return data.addToData;
+  return data.data;
 }
 
-export async function remove(token, id, rootGetters) {
+export async function remove(token, id) {
   let { data } = await http.post(
     `cart/remove`,
-    { oldToken: token, id: id },
+    { oldToken: token, id },
     {
-      errorAlert: 'при удалении товара',
-      fixed: false,
+      errorAlert: { text: 'при удалении товара', fixed: false },
     }
   );
   return data;
@@ -32,10 +39,16 @@ export async function remove(token, id, rootGetters) {
 export async function count(token, id, cnt) {
   let { data } = await http.post(
     `cart/count`,
-    { oldToken: token, id: id, cnt: cnt },
     {
-      errorAlert: 'при изменении количества товара',
-      fixed: false,
+      oldToken: token,
+      id,
+      cnt,
+    },
+    {
+      errorAlert: {
+        text: 'при изменении количества товара',
+        fixed: false,
+      },
     }
   );
   return data.setData;

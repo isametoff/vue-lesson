@@ -21,28 +21,10 @@ export default {
     },
   },
   actions: {
-    async load({ state, getters, commit, dispatch }) {
-      try {
-        let response = await productsApi.all();
-        if (response) {
-          commit('setItems', response);
-        }
-        if (!getters.notItems) {
-          dispatch('alerts/clear', '', {
-            root: true,
-          });
-        }
-      } catch (e) {
-        if (getters.notItems) {
-          dispatch(
-            'alerts/add',
-            {
-              text: 'Ошибка сервера',
-              fixed: getters.notItems,
-            },
-            { root: true }
-          );
-        }
+    async load({commit}) {
+      let response = await productsApi.all();
+      if (response) {
+        commit('setItems', response);
       }
     },
   },

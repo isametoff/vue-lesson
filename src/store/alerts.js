@@ -27,8 +27,10 @@ export default {
     clear(state) {
       state.messages = [];
     },
-    remove(state, id) {
-      state.messages = state.messages.filter((id) => id !== id);
+    remove(state, { id }) {
+      state.messages = state.messages.filter(
+        (message) => message.id !== id && message.fixed !== false
+      );
     },
     startProccess(state, id) {
       state.proccessId.push(id);
@@ -39,18 +41,27 @@ export default {
   },
   actions: {
     add({ commit, dispatch, getters, rootGetters, state }, payload) {
+      console.log(payload);
       if (
         !getters.inProccess(state.lastId) &&
         typeof Boolean(payload.fixed) === 'boolean'
-        // &&
-        // payload.fixed !== undefined
       ) {
         commit('add', { text: payload.text, fixed: payload.fixed });
         if (payload.fixed === false) {
           setTimeout(() => {
             let { lastId } = state.lastId;
             commit('startProccess', state.lastId);
-            commit('remove', { ind: getters.index({ id: lastId }) });
+            commit('remove', {
+              ind: getters.index({ id: lastId }),
+            });
+            // dispatch(
+            //   'alerts/remove',
+            //   {
+            //     text: 'Ошибка сервера',
+            //     fixed: rootGetters['products/notItems'],
+            //   },
+            //   { root: true }
+            // );
             commit('endProccess', state.lastId);
           }, 3000);
         }

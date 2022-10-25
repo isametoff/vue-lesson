@@ -5,30 +5,60 @@ import products from './products';
 import user from './user';
 import alerts from './alerts';
 
-import { addErrorHandler } from '@/api/http';
+import { addResponseHandler } from '@/api/http';
 
 const store = createStore({
-	modules: {
-		cart,
-		products,
-		user,
-		alerts
-	},
-	strict: process.env.NODE_ENV !== 'production'
+  modules: {
+    cart,
+    products,
+    user,
+    alerts,
+  },
+  strict: process.env.NODE_ENV !== 'production',
 });
 
-addErrorHandler(function(error){
-	let config = error.response.config;
+addResponseHandler(
+  function (response) {
+    if ('errorAlert' in response.config) {
+      response = { res: true, data: response };
+    }
 
-	if('errorAlert' in config){
-		store.dispatch('alerts/add', { 
-			text: 'Ошибка ответа от сервера ' + config.errorAlert
-		});
+    return response;
+  },
+  function (error) {
+    let config = error.response.config;
 
-		return false;
-	}
-	
-	return Promise.reject(error);
-});
+    if ('errorAlert' in config) {
+      let { errorAlert } = config;
+
+      if (typeof errorAlert === 'string') {
+        errorAlert = { text: errorAlert };
+      }
+
+      store.dispatch('alerts/add', {
+        text: 'Ошибка ответа от сервера ' + errorAlert.text,
+        fixed: errorAlert.fixed,
+      });
+
+      return false;
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// addErrorHandler(function(error){
+// 	let config = error.response.config;
+
+// 	if('errorAlert' in config){
+// 		store.dispatch('alerts/add', {
+// 			text: 'Ошибка ответа от сервера ' + config.errorAlert
+// 		});
+
+// 		return false;
+// 	}
+
+// 	return Promise.reject(error);
+// });
 
 export default store;
