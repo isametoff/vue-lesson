@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Products</h1>
-    <div class="row" v-if="notProducts">
+    <div class="row" v-if="noProducts||!productList">
       <div class="col col-sm-4 mb-3 mt-3" v-for="idx in 6" :key="idx">
         <div class="card">
           <div class="card-body">
@@ -66,7 +66,7 @@ export default {
     ...mapGetters('products', {
       productList: 'all',
       isRest: 'isRest',
-      notProducts: 'notItems',
+      noProducts: 'notItems',
     }),
     ...mapGetters('cart', ['inCart']),
   },

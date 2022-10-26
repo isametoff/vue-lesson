@@ -7,6 +7,6 @@ export async function all() {
       fixed: true,
     },
   });
-  let products = data.data.data;
+  let products = data;
   return products;
 }

@@ -19,13 +19,10 @@ const store = createStore({
 
 addResponseHandler(
   function (response) {
-    if ('errorAlert' in response.config) {
-      response = { res: true, data: response };
-    }
-
-    return response;
+    return { data: { res: true, data: response.data } };
   },
   function (error) {
+    console.log(error.response);
     let config = error.response.config;
 
     if ('errorAlert' in config) {
@@ -40,7 +37,7 @@ addResponseHandler(
         fixed: errorAlert.fixed,
       });
 
-      return false;
+      return { data: { res: false, data: null } };
     }
 
     return Promise.reject(error);

@@ -1,4 +1,3 @@
-// import actions from './cart/actions';
 
 export default {
   namespaced: true,
@@ -43,8 +42,7 @@ export default {
     add({ commit, dispatch, getters, rootGetters, state }, payload) {
       console.log(payload);
       if (
-        !getters.inProccess(state.lastId) &&
-        typeof Boolean(payload.fixed) === 'boolean'
+        !getters.inProccess(state.lastId)
       ) {
         commit('add', { text: payload.text, fixed: payload.fixed });
         if (payload.fixed === false) {
@@ -54,19 +52,10 @@ export default {
             commit('remove', {
               ind: getters.index({ id: lastId }),
             });
-            // dispatch(
-            //   'alerts/remove',
-            //   {
-            //     text: 'Ошибка сервера',
-            //     fixed: rootGetters['products/notItems'],
-            //   },
-            //   { root: true }
-            // );
             commit('endProccess', state.lastId);
           }, 3000);
         }
       }
-      console.log(state.messages);
     },
     remove({ commit }, payload) {
       commit('remove', { ind: getters.index(id) });

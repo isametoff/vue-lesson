@@ -3,44 +3,41 @@ import * as cartApi from '@/api/cart.js';
 export default {
   async load({ commit }) {
     let oldToken = localStorage.getItem('cartToken');
-    let { cart, token, needUpdate } = await cartApi.load(oldToken);
+    let response = await cartApi.load(oldToken);
+    if (response.res) {
+      let { cart, token, needUpdate } = response.data;
 
-    if (needUpdate) {
-      localStorage.setItem('cartToken', token);
+      if (needUpdate) {
+        localStorage.setItem('cartToken', token);
+      }
+
+      commit('setToken', { token });
+      commit('setCart', { cart });
     }
-
-    commit('setToken', { token });
-    commit('setCart', { cart });
   },
   async add({ state, getters, commit }, { id }) {
     if (getters.canAdd(id)) {
       commit('startProccess', id);
 
-      let res = await cartApi.add(state.token, id);
-      // console.log(res.addToData);
-      if (res.addToData === true) {
-        commit('add', { id });
-        commit('endProccess', id);
-      }
+      let response = await cartApi.add(state.token, id);
+      response.res
+        ? (commit('add', { id }), commit('endProccess', id))
+        : commit('endProccess', id);
     }
   },
-  async removeProsess({commit }, { id }) {
+  async removeProsess({ commit }, { id }) {
     commit('endProccess', id);
   },
   async remove({ state, getters, commit }, { id }) {
-    try {
-      if (getters.canUpdate(id)) {
-        commit('startProccess', id);
-        let res = await cartApi.remove(state.token, id);
+    if (getters.canUpdate(id)) {
+      commit('startProccess', id);
+      let res = await cartApi.remove(state.token, id);
 
-        if (res === true) {
-          commit('remove', { ind: getters.index(id) });
-        }
-        setTimeout(commit('endProccess', { id: id }), 10000);
+      if (res) {
+        commit('remove', { ind: getters.index(id) });
+        commit('endProccess', id);
       }
-    } catch (error) {
-      commit('endProccess', id);
-      console.log(error);
+      setTimeout(commit('endProccess', { id: id }), 10000);
     }
   },
   async setCnt(
@@ -49,10 +46,8 @@ export default {
   ) {
     if (getters.canUpdate(id)) {
       commit('startProccess', id);
-      let res = false;
-      res = await cartApi.count(state.token, id, cnt);
-
-      if (res === true) {
+      let response = await cartApi.count(state.token, id, cnt);
+      if (response.res) {
         let item = getters.productsDetailed.find(
           (product) => product.id === id
         );
@@ -61,6 +56,8 @@ export default {
           : item.rest >= cnt
           ? commit('setCnt', { id: id, cnt: cnt })
           : '';
+        commit('endProccess', id);
+      } else {
         commit('endProccess', id);
       }
     }

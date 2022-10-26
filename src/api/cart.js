@@ -22,7 +22,7 @@ export async function add(token, id) {
       },
     }
   );
-  return data.data;
+  return data;
 }
 
 export async function remove(token, id) {
@@ -51,5 +51,5 @@ export async function count(token, id, cnt) {
       },
     }
   );
-  return data.setData;
+  return data;
 }
