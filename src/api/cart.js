@@ -17,7 +17,7 @@ export async function add(token, id) {
     { oldToken: token, id },
     {
       errorAlert: {
-        text: 'при добавлении товара',
+        text: 'при добавлении товара', 
         fixed: false,
       },
     }

@@ -8,7 +8,7 @@ export default {
   },
   getters: {
     notItems: (state) => state.items?.length < 1 || state.items === null,
-    all: (state) => (state.items?.length > 0 ? state.items : state.fakeItems),
+    all: (state) => state.items,
     one: (state) => (id) => state.items?.find((pr) => pr.id == id),
     isRest: (state) => (id) =>
       state.items.some((item) => item.id == id && item.rest > 0),

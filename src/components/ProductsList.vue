@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>{{productList}}</p>
     <h1>Products</h1>
     <div class="row" v-if="noProducts||!productList">
       <div class="col col-sm-4 mb-3 mt-3" v-for="idx in 6" :key="idx">

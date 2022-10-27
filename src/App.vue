@@ -52,6 +52,7 @@ export default {
       { route: 'catalog', text: 'Products' },
       { route: 'cart', text: 'Cart' },
       { route: 'checkout', text: 'Order' },
+      { route: 'signup', text: 'Sign Up' },
     ],
   }),
   computed: {

@@ -22,7 +22,7 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
-    console.log(error.response);
+    console.log(error);
     let config = error.response.config;
 
     if ('errorAlert' in config) {
@@ -38,6 +38,8 @@ addResponseHandler(
       });
 
       return { data: { res: false, data: null } };
+    } else {
+      store.dispatch('user/addAlerts', error.response.data);
     }
 
     return Promise.reject(error);
