@@ -1,0 +1,70 @@
+<template>
+  <form>
+    <div class="was-validated">
+      <div>
+        <input
+          type="text"
+          autocomplete="username"
+          v-model="data.login"
+          placeholder="Login"
+        />
+      </div>
+      <div v-if="allAlerts.login">
+        <p class="mt-2 mb-0 text-danger">{{ allAlerts.login }}</p>
+      </div>
+      <div>
+        <input
+          type="password"
+          autocomplete="password"
+          v-model="data.password"
+          placeholder="Password"
+        />
+      </div>
+      <div v-if="allAlerts.password">
+        <p class="mt-2 mb-0 text-danger">{{ allAlerts.password }}</p>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary" @click="trySignIn">
+          Sign Up
+        </button>
+      </div>
+    </div>
+  </form>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex';
+
+export default {
+  components: {},
+  mounted() {
+    this.cleanErrors();
+    console.log('🚀 ~ file: SignIn.vue ~ line 59 ~ allAlerts', this.allAlerts);
+  },
+  data() {
+    return {
+      data: {
+        login: '',
+        password: '',
+      },
+    };
+  },
+  computed: {
+    ...mapGetters('user', ['allAlerts']),
+  },
+  methods: {
+    ...mapActions('user', ['auth', 'cleanErrors']),
+    async trySignIn() {
+      let auth = await this.auth({
+        login: this.data.login,
+        password: this.data.password,
+      });
+      if (auth.res) {
+        this.data.login = '';
+        this.data.password = '';
+        this.$router.push({ name: 'catalog' });
+      }
+    },
+  },
+};
+</script>

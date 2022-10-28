@@ -22,7 +22,6 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
-    console.log(error);
     let config = error.response.config;
 
     if ('errorAlert' in config) {
@@ -40,24 +39,11 @@ addResponseHandler(
       return { data: { res: false, data: null } };
     } else {
       store.dispatch('user/addAlerts', error.response.data);
+      return { data: { res: false, data: error.response.data } };
     }
 
-    return Promise.reject(error);
+    // return Promise.reject(error);
   }
 );
-
-// addErrorHandler(function(error){
-// 	let config = error.response.config;
-
-// 	if('errorAlert' in config){
-// 		store.dispatch('alerts/add', {
-// 			text: 'Ошибка ответа от сервера ' + config.errorAlert
-// 		});
-
-// 		return false;
-// 	}
-
-// 	return Promise.reject(error);
-// });
 
 export default store;

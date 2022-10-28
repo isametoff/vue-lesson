@@ -5,6 +5,7 @@ import AppProduct from '@/components/Product';
 import AppCart from '@/components/Cart';
 import AppCheckout from '@/components/Checkout';
 import AppE404 from '@/components/E404';
+import SignIn from '@/components/SignIn';
 import SignUp from '@/components/SignUp';
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
     name: 'signup',
     path: '/signup',
     component: SignUp,
+  },
+  {
+    name: 'signin',
+    path: '/signin',
+    component: SignIn,
   },
   {
     path: '/:any(.*)', // .*

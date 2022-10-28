@@ -5,18 +5,21 @@
         <input
           type="email"
           autocomplete="email"
-          v-model="regData.email"
+          v-model="data.email"
           placeholder="Email"
         />
       </div>
-      <div v-if="allAlerts.email" class="mt-2 mb-0 text-danger">
+      <div
+        v-if="allAlerts.email && data.email.length == data.email.length"
+        class="mt-2 mb-0 text-danger"
+      >
         {{ allAlerts.email }}
       </div>
       <div>
         <input
           type="text"
           autocomplete="username"
-          v-model="regData.login"
+          v-model="data.login"
           placeholder="Login"
         />
       </div>
@@ -27,7 +30,7 @@
         <input
           type="password"
           autocomplete="password"
-          v-model="regData.password"
+          v-model="data.password"
           placeholder="Password"
         />
       </div>
@@ -40,7 +43,7 @@
             id="pwd"
             type="password"
             autocomplete="current-password"
-            v-model="regData.password_confirmation"
+            v-model="data.password_confirmation"
             placeholder="Password confirm"
           />
         </div>
@@ -51,7 +54,7 @@
         </div>
       </div>
       <div>
-        <button type="button" class="btn btn-primary" @click="trySignup">
+        <button type="button" class="btn btn-primary" @click="trySignUp">
           Sign Up
         </button>
       </div>
@@ -66,7 +69,7 @@ export default {
   components: {},
   data() {
     return {
-      regData: {
+      data: {
         email: '',
         login: '',
         password: '',
@@ -78,20 +81,28 @@ export default {
     ...mapGetters('user', ['allAlerts']),
   },
   methods: {
-    ...mapActions('user', ['registration']),
-    async trySignup() {
+    ...mapActions('user', ['registration', 'cleanAlerts']),
+    async trySignUp() {
       let registration = await this.registration({
-        email: this.regData.email,
-        login: this.regData.login,
-        password: this.regData.password,
-        password_confirmation: this.regData.password_confirmation,
+        email: this.data.email,
+        login: this.data.login,
+        password: this.data.password,
+        password_confirmation: this.data.password_confirmation,
       });
+      console.log(
+        '🚀 ~ file: SignUp.vue ~ line 90 ~ trySignUp ~ data.email',
+        this.data.email.length
+      );
+
       if (registration.res) {
-        this.regData.email = '';
-        this.regData.login = '';
-        this.regData.password = '';
+        this.data.email = '';
+        this.data.login = '';
+        this.data.password = '';
+        this.data.password_confirmation = '';
+        this.$router.push({ name: 'signin' });
       }
     },
   },
+  watch: {},
 };
 </script>
