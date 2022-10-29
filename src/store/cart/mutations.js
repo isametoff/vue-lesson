@@ -6,7 +6,7 @@ export default {
     state.token = token;
   },
   add(state, { id }) {
-    state.products.push({ id, cnt: 1 });
+    state.products.push({ id, cnt: 1 }); 
   },
   remove(state, { ind }) {
     state.products.splice(ind, 1);

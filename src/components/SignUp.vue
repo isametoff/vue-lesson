@@ -10,7 +10,7 @@
         />
       </div>
       <div
-        v-if="allAlerts.email && data.email.length == data.email.length"
+        v-if="allAlerts.email"
         class="mt-2 mb-0 text-danger"
       >
         {{ allAlerts.email }}
@@ -67,6 +67,9 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   components: {},
+  mounted() {
+    console.log('🚀 ~ file: SignUp.vue ~ line 59 ~ allAlerts', this.allAlerts);
+  },
   data() {
     return {
       data: {
@@ -89,12 +92,8 @@ export default {
         password: this.data.password,
         password_confirmation: this.data.password_confirmation,
       });
-      console.log(
-        '🚀 ~ file: SignUp.vue ~ line 90 ~ trySignUp ~ data.email',
-        this.data.email.length
-      );
 
-      if (registration.res) {
+      if (registration.data) {
         this.data.email = '';
         this.data.login = '';
         this.data.password = '';

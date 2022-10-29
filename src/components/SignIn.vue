@@ -39,7 +39,6 @@ export default {
   components: {},
   mounted() {
     this.cleanErrors();
-    console.log('🚀 ~ file: SignIn.vue ~ line 59 ~ allAlerts', this.allAlerts);
   },
   data() {
     return {
@@ -59,7 +58,8 @@ export default {
         login: this.data.login,
         password: this.data.password,
       });
-      if (auth.res) {
+        console.log("🚀 ~ file: SignIn.vue ~ line 62 ~ trySignIn ~ auth.data", auth)
+      if (auth.data) {
         this.data.login = '';
         this.data.password = '';
         this.$router.push({ name: 'catalog' });

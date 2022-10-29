@@ -8,8 +8,6 @@ export async function auth(
     login,
     password,
   });
-  console.log("🚀 ~ file: auth.js ~ line 15 ~ data", data)
-
   
   return data;
 }

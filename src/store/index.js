@@ -38,7 +38,6 @@ addResponseHandler(
 
       return { data: { res: false, data: null } };
     } else {
-      store.dispatch('user/addAlerts', error.response.data);
       return { data: { res: false, data: error.response.data } };
     }
 
