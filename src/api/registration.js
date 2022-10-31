@@ -5,12 +5,14 @@ export async function registration({
   login,
   password,
   password_confirmation,
+  register,
 }) {
   let { data } = await http.post('registration', {
     email,
     login,
     password,
     password_confirmation,
+    register,
   });
 
   return data;

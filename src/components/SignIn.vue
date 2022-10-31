@@ -49,21 +49,49 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['allAlerts']),
+    ...mapGetters('user', [
+      'allAlerts',
+      'isErrors',
+      'isAlertsLogin',
+      'isAlertsPassword',
+    ]),
+    isAuth() {
+      return this.isAlertsLogin === true && this.isAlertsPassword === true
+        ? false
+        : true;
+    },
   },
   methods: {
-    ...mapActions('user', ['auth', 'cleanErrors']),
+    ...mapActions('user', ['auth', 'authValidate', 'cleanErrors']),
     async trySignIn() {
+      console.log('🚀 ~ file: SignIn.vue ~ line 55 ~ isAuth ~ ', this.isAuth);
       let auth = await this.auth({
         login: this.data.login,
         password: this.data.password,
+        isAuth: this.isAuth,
+        // isAuth: 'true',
       });
-        console.log("🚀 ~ file: SignIn.vue ~ line 62 ~ trySignIn ~ auth.data", auth)
+      console.log('🚀 ~ file: SignIn.vue ~ line 67 ~ trySignIn ~ auth', auth);
+      console.log(
+        '🚀 ~ file: SignIn.vue ~ line 64 ~ trySignIn ~ this.isAuth',
+        this.isAuth
+      );
       if (auth.data) {
         this.data.login = '';
         this.data.password = '';
         this.$router.push({ name: 'catalog' });
       }
+    },
+  },
+  watch: {
+    data: {
+      handler() {
+        this.authValidate({
+          login: this.data.login,
+          password: this.data.password,
+        });
+      },
+      deep: true,
     },
   },
 };

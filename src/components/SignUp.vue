@@ -9,10 +9,7 @@
           placeholder="Email"
         />
       </div>
-      <div
-        v-if="allAlerts.email"
-        class="mt-2 mb-0 text-danger"
-      >
+      <div v-if="allAlerts.email" class="mt-2 mb-0 text-danger">
         {{ allAlerts.email }}
       </div>
       <div>
@@ -68,7 +65,7 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   components: {},
   mounted() {
-    console.log('🚀 ~ file: SignUp.vue ~ line 59 ~ allAlerts', this.allAlerts);
+    this.cleanErrors();
   },
   data() {
     return {
@@ -81,16 +78,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['allAlerts']),
+    ...mapGetters('user', ['allAlerts', 'isErrors']),
+    isReg() {
+      this.isErrors === false ? true : false;
+    },
   },
   methods: {
-    ...mapActions('user', ['registration', 'cleanAlerts']),
+    ...mapActions('user', ['registration', 'cleanErrors']),
     async trySignUp() {
       let registration = await this.registration({
         email: this.data.email,
         login: this.data.login,
         password: this.data.password,
         password_confirmation: this.data.password_confirmation,
+        register: this.isReg,
       });
 
       if (registration.data) {
@@ -102,6 +103,18 @@ export default {
       }
     },
   },
-  watch: {},
+  watch: {
+    data: {
+      handler() {
+        this.registration({
+          email: this.data.email,
+          login: this.data.login,
+          password: this.data.password,
+          password_confirmation: this.data.password_confirmation,
+        });
+      },
+      deep: true,
+    },
+  },
 };
 </script>
