@@ -62,21 +62,14 @@ export default {
     },
   },
   methods: {
-    ...mapActions('user', ['auth', 'authValidate', 'cleanErrors']),
+    ...mapActions('user', ['auth', 'cleanErrors']),
     async trySignIn() {
-      console.log('🚀 ~ file: SignIn.vue ~ line 55 ~ isAuth ~ ', this.isAuth);
       let auth = await this.auth({
         login: this.data.login,
         password: this.data.password,
         isAuth: this.isAuth,
-        // isAuth: 'true',
       });
-      console.log('🚀 ~ file: SignIn.vue ~ line 67 ~ trySignIn ~ auth', auth);
-      console.log(
-        '🚀 ~ file: SignIn.vue ~ line 64 ~ trySignIn ~ this.isAuth',
-        this.isAuth
-      );
-      if (auth.data) {
+      if (auth.data === true) {
         this.data.login = '';
         this.data.password = '';
         this.$router.push({ name: 'catalog' });
@@ -86,7 +79,7 @@ export default {
   watch: {
     data: {
       handler() {
-        this.authValidate({
+        this.auth({
           login: this.data.login,
           password: this.data.password,
         });

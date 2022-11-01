@@ -42,7 +42,7 @@ addResponseHandler(
       return { data: { res: false, data: error.response.data } };
     }
 
-    // return Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 

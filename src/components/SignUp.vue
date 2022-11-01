@@ -78,9 +78,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['allAlerts', 'isErrors']),
+    ...mapGetters('user', ['allAlerts', 'isAlerts']),
     isReg() {
-      this.isErrors === false ? true : false;
+      return this.isAlerts === false ? true : false;
     },
   },
   methods: {
