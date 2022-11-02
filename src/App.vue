@@ -25,6 +25,10 @@
                 >{{ item.text }}
               </router-link>
             </li>
+            <li class="nav-item">
+              <a @click="logOut()" href="#" class="m-1">Log Out</a>
+            </li>
+            <li class="nav-item mr-5">{{ userItems.login }}</li>
           </ul>
         </nav>
         <hr />
@@ -39,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import TheAlerts from '@/components/Alerts';
 
 export default {
@@ -58,8 +62,11 @@ export default {
   }),
   computed: {
     ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
+    ...mapGetters('user', ['userItems']),
   },
-  methods: {},
+  methods: {
+    ...mapActions('user', ['logOut']),
+  },
 };
 </script>
 

@@ -21,7 +21,10 @@
         />
       </div>
       <div v-if="allAlerts.password">
-        <p class="mt-2 mb-0 text-danger">{{ allAlerts.password }}</p>
+        <p class="mt-2 mb-1 text-danger">{{ allAlerts.password }}</p>
+      </div>
+      <div v-if="allAlerts.error">
+        <p class="mt-2 mb-1 text-danger">{{ allAlerts.error }}</p>
       </div>
       <div>
         <button type="button" class="btn btn-primary" @click="trySignIn">

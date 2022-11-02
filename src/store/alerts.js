@@ -4,7 +4,7 @@ export default {
   state: {
     messages: [],
     lastId: 0,
-    proccessId: [],
+    proccessId: [], 
   },
   getters: {
     all: (state) => state.messages,

@@ -1,17 +1,25 @@
 import * as regApi from '@/api/registration.js';
 import * as authApi from '@/api/auth.js';
-import getters from './cart/getters';
+// import store from './store';
 
 export default {
   namespaced: true,
   state: {
-    user: null,
-    errors: { email: '', login: '', password: '', password_confirmation: '' },
+    user: [],
+    errors: {
+      email: '',
+      login: '',
+      password: '',
+      password_confirmation: '',
+      error: '',
+    },
+    token: '',
   },
   getters: {
+    isToken: (state) => state.token !== null,
     isLogin: (state) => state.user !== null,
     allAlerts: (state) => state.errors,
-    allUser: (state) => state.user,
+    userItems: (state) => state.user,
     isAlertsEmail: (state) => (state.errors?.email !== '' ? true : false),
     isAlertsLogin: (state) => (state.errors?.login !== '' ? true : false),
     isAlertsPassword: (state) => (state.errors?.password !== '' ? true : false),
@@ -27,12 +35,16 @@ export default {
     setUser(state, user) {
       state.user = user;
     },
+    setToken(state, token) {
+      state.token = token;
+    },
     cleanErrors(state) {
       state.errors = {
         email: '',
         login: '',
         password: '',
         password_confirmation: '',
+        error: '',
       };
     },
     addAlertsEmail(state, { email }) {
@@ -47,8 +59,30 @@ export default {
     addAlertsPasswordConfirm(state, { password_confirmation }) {
       state.errors.password_confirmation = password_confirmation;
     },
+    addAlertsError(state, { error }) {
+      state.errors.error = error;
+    },
   },
   actions: {
+    async autoLogin({ commit, state, getters }) {
+      let token = state.token;
+      console.log(
+        '🚀 ~ file: user.js ~ line 67 ~ autoLogin ~ getters.isToken',
+        getters.isToken
+      );
+      if (getters.isToken) {
+        let { res, data } = await authApi.check({ token });
+        console.log(
+          '🚀 ~ file: user.js ~ line 68 ~ autoLogin ~ { res, data }',
+          { res, data }
+        );
+
+        if (res === true) {
+          commit('setUser', data);
+        }
+      }
+    },
+
     async registration(
       { state, commit, getters },
       { email, login, password, password_confirmation, register }
@@ -64,6 +98,10 @@ export default {
       if (res === true) {
         commit('cleanErrors');
       }
+      let { error } = data;
+      commit('addAlertsEmail', {
+        error,
+      });
       if (email !== '' || (register === true && email == '')) {
         let { email } = data;
         email = email?.[0] ?? '';
@@ -97,11 +135,25 @@ export default {
       }
       return data;
     },
+
     async auth({ state, commit }, { login, password, isAuth }) {
       let { res, data } = await authApi.auth({ login, password, isAuth });
 
-      if (res === true && data === true) {
+      let { access_token } = data;
+      if (access_token && res === true) {
+        localStorage.setItem('access_token', access_token);
+        commit('setToken', access_token);
+      }
+      let { error } = data;
+      commit('addAlertsError', {
+        error,
+      });
+      if (res === true) {
         commit('cleanErrors');
+        let { res, data } = await authApi.check({ token: access_token });
+        if (res === true) {
+          commit('setUser', data);
+        }
       }
       if (login !== '' || (isAuth === true && login == '')) {
         let { login } = data;
@@ -119,6 +171,26 @@ export default {
       }
       return data;
     },
+
+    async logOut({ state, commit, dispatch }) {
+      let token = state.token;
+      let { res, data } = await authApi.logOut({ token });
+      console.log("🚀 ~ file: user.js ~ line 178 ~ logOut ~ { res, data }", { res, data })
+      
+      if (res === true && data.logout === true) {
+        commit('setUser', []);
+        localStorage.setItem('access_token', '');
+        dispatch(
+          'alerts/add',
+          {
+            text: data.message,
+            fixed: false,
+          },
+          { root: true }
+        );
+      }
+    },
+
     cleanErrors({ commit }) {
       commit('cleanErrors');
     },
