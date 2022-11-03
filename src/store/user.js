@@ -1,6 +1,5 @@
 import * as regApi from '@/api/registration.js';
 import * as authApi from '@/api/auth.js';
-// import store from './store';
 
 export default {
   namespaced: true,
@@ -13,11 +12,11 @@ export default {
       password_confirmation: '',
       error: '',
     },
-    token: '',
+    token: localStorage.getItem('access_token') || '',
   },
   getters: {
     isToken: (state) => state.token !== null,
-    isLogin: (state) => state.user !== null,
+    isLogin: (state) => (state.user?.login !== undefined ? true : false),
     allAlerts: (state) => state.errors,
     userItems: (state) => state.user,
     isAlertsEmail: (state) => (state.errors?.email !== '' ? true : false),
@@ -175,8 +174,11 @@ export default {
     async logOut({ state, commit, dispatch }) {
       let token = state.token;
       let { res, data } = await authApi.logOut({ token });
-      console.log("🚀 ~ file: user.js ~ line 178 ~ logOut ~ { res, data }", { res, data })
-      
+      console.log('🚀 ~ file: user.js ~ line 178 ~ logOut ~ { res, data }', {
+        res,
+        data,
+      });
+
       if (res === true && data.logout === true) {
         commit('setUser', []);
         localStorage.setItem('access_token', '');

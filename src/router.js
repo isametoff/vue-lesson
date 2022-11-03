@@ -1,14 +1,18 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import AppProductsList from '@/components/ProductsList';
-import AppProduct from '@/components/Product';
-import AppCart from '@/components/Cart';
-import AppCheckout from '@/components/Checkout';
-import AppE404 from '@/components/E404';
-import SignIn from '@/components/SignIn';
-import SignUp from '@/components/SignUp';
+import store from '@/store';
 
-const routes = [
+import AppProductsList from '@/views/ProductsList';
+import AppProduct from '@/views/Product';
+import AppCart from '@/views/Cart';
+import AppE404 from '@/views/E404';
+import SignIn from '@/views/SignIn';
+import SignUp from '@/views/SignUp';
+import OfficeIndex from '@/views/office/Index';
+import OfficeBase from '@/views/office/Base';
+import OfficeOrders from '@/views/office/Orders';
+
+let routes = [
   {
     name: 'catalog',
     path: '/',
@@ -18,11 +22,6 @@ const routes = [
     name: 'cart',
     path: '/cart',
     component: AppCart,
-  },
-  {
-    name: 'checkout',
-    path: '/order',
-    component: AppCheckout,
   },
   {
     name: 'product',
@@ -38,14 +37,46 @@ const routes = [
     name: 'signin',
     path: '/signin',
     component: SignIn,
+    async beforeEnter(from, to, next) {
+      await store.getters['user/ready'];
+      store.getters['user/isLogin'] ? next({ name: 'office' }) : next();
+    },
   },
   {
-    path: '/:any(.*)', // .*
+    path: '/office',
+    component: OfficeBase,
+    meta: { auth: true },
+    children: [
+      {
+        path: '',
+        component: OfficeIndex,
+        name: 'office',
+      },
+      {
+        path: 'orders',
+        component: OfficeOrders,
+        name: 'office-orders',
+      },
+    ],
+  },
+  {
+    path: '/:any(.*)',
     component: AppE404,
   },
 ];
 
-export default createRouter({
-	routes,
-	history: createWebHistory()
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
 });
+
+router.beforeEach(async (to, from, next) => {
+  if (to.meta.auth) {
+    await store.getters['user/ready'];
+    store.getters['user/isLogin'] ? next() : next({ name: 'login' });
+  } else {
+    next();
+  }
+});
+
+export default router;

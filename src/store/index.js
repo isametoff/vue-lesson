@@ -24,22 +24,20 @@ addResponseHandler(
   function (error) {
     console.log('🚀 ~ file: index.js ~ line 25 ~ error', error.response);
     let config = error.response.config;
+    let errorsRequest = error.response.data;
+    console.log("🚀 ~ file: index.js ~ line 27 ~ error.response.config", error)
 
     if ('errorAlert' in config) {
       let { errorAlert } = config;
-
-      if (typeof errorAlert === 'string') {
-        errorAlert = { text: errorAlert };
-      }
-
       store.dispatch('alerts/add', {
         text: 'Ошибка ответа от сервера ' + errorAlert.text,
         fixed: errorAlert.fixed,
       });
+      return { data: { res: false, data: data } };
+    }
 
-      return { data: { res: false, data: null } };
-    } else {
-      return { data: { res: false, data: error.response.data } };
+    if (errorsRequest) {
+      return { data: { res: false, data: errorsRequest } };
     }
 
     return Promise.reject(error);

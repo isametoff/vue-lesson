@@ -67,12 +67,13 @@ export default {
   methods: {
     ...mapActions('user', ['auth', 'cleanErrors']),
     async trySignIn() {
-      let auth = await this.auth({
+      let data = await this.auth({
         login: this.data.login,
         password: this.data.password,
         isAuth: this.isAuth,
       });
-      if (auth.data === true) {
+      console.log("🚀 ~ file: SignIn.vue ~ line 75 ~ trySignIn ~ auth", data)
+      if (data.access_token) {
         this.data.login = '';
         this.data.password = '';
         this.$router.push({ name: 'catalog' });

@@ -3,7 +3,7 @@
     <transition-group name="item" tag="div">
       <div class="item" v-for="alert in alerts" :key="alert.id">
         {{ alert.message }}
-        <p class="mt-2">
+        <p class="mt-2" v-if="alert.fixed === true">
           Эта ошибка не позволит сайту работать,
           <a href="#" @click="location.reload()">перезагрузите страницу</a>
         </p>

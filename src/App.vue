@@ -21,14 +21,24 @@
               <router-link
                 class="m-1"
                 :to="{ name: item.route }"
-                exact-active-class="text-danger"
+                active-class="text-danger"
+                :exact="item.exact"
                 >{{ item.text }}
               </router-link>
             </li>
-            <li class="nav-item">
-              <a @click="logOut()" href="#" class="m-1">Log Out</a>
+            <li v-for="item in menuItems" :key="item.route" class="nav-item">
+              <router-link
+                class="m-1"
+                :to="{ name: item.route }"
+                active-class="text-danger"
+                :exact="item.exact"
+                >{{ item.text }}
+              </router-link>
             </li>
-            <li class="nav-item mr-5">{{ userItems.login }}</li>
+            <li v-if="isLogin" class="nav-item mr-5">Username: {{ userItems.login }}</li>
+            <li v-if="isLogin" class="nav-item">
+              <a @click="logOut()" href="#" class="m-1">Logout</a>
+            </li>
           </ul>
         </nav>
         <hr />
@@ -55,14 +65,21 @@ export default {
     menu: [
       { route: 'catalog', text: 'Products' },
       { route: 'cart', text: 'Cart' },
-      { route: 'checkout', text: 'Order' },
-      { route: 'signin', text: 'Sign In' },
-      { route: 'signup', text: 'Sign Up' },
     ],
   }),
   computed: {
     ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
-    ...mapGetters('user', ['userItems']),
+    ...mapGetters('user', ['userItems', 'isLogin']),
+    menuItems() {
+      let menu = this.isLogin
+        ? [{ route: 'office', text: 'Office', exact: false }]
+        : [
+            { route: 'signin', text: 'Login', exact: false },
+            { route: 'signup', text: 'Sign Up', exact: false },
+          ];
+
+      return menu;
+    },
   },
   methods: {
     ...mapActions('user', ['logOut']),
