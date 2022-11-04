@@ -135,40 +135,42 @@ export default {
       return data;
     },
 
-    async auth({ state, commit }, { login, password, isAuth }) {
-      let { res, data } = await authApi.auth({ login, password, isAuth });
+    async auth({ getters, state, commit }, { login, password, isAuth }) {
+      if (!getters.isLogin) {
+        let { res, data } = await authApi.auth({ login, password, isAuth });
 
-      let { access_token } = data;
-      if (access_token && res === true) {
-        localStorage.setItem('access_token', access_token);
-        commit('setToken', access_token);
-      }
-      let { error } = data;
-      commit('addAlertsError', {
-        error,
-      });
-      if (res === true) {
-        commit('cleanErrors');
-        let { res, data } = await authApi.check({ token: access_token });
-        if (res === true) {
-          commit('setUser', data);
+        let { access_token } = data;
+        if (access_token && res === true) {
+          localStorage.setItem('access_token', access_token);
+          commit('setToken', access_token);
         }
-      }
-      if (login !== '' || (isAuth === true && login == '')) {
-        let { login } = data;
-        login = login?.[0] ?? '';
-        commit('addAlertsLogin', {
-          login,
+        let { error } = data;
+        commit('addAlertsError', {
+          error,
         });
+        if (res === true) {
+          commit('cleanErrors');
+          let { res, data } = await authApi.check({ token: access_token });
+          if (res === true) {
+            commit('setUser', data);
+          }
+        }
+        if (login !== '' || (isAuth === true && login == '')) {
+          let { login } = data;
+          login = login?.[0] ?? '';
+          commit('addAlertsLogin', {
+            login,
+          });
+        }
+        if (password !== '' || (isAuth === true && password == '')) {
+          let { password } = data;
+          password = password?.[0] ?? '';
+          commit('addAlertsPassword', {
+            password,
+          });
+        }
+        return data;
       }
-      if (password !== '' || (isAuth === true && password == '')) {
-        let { password } = data;
-        password = password?.[0] ?? '';
-        commit('addAlertsPassword', {
-          password,
-        });
-      }
-      return data;
     },
 
     async logOut({ state, commit, dispatch }) {

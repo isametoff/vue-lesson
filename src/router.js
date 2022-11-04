@@ -8,9 +8,10 @@ import AppCart from '@/views/Cart';
 import AppE404 from '@/views/E404';
 import SignIn from '@/views/SignIn';
 import SignUp from '@/views/SignUp';
-import OfficeIndex from '@/views/office/Index';
-import OfficeBase from '@/views/office/Base';
-import OfficeOrders from '@/views/office/Orders';
+import CheckoutIndex from '@/views/checkout/Index';
+import CheckoutBase from '@/views/checkout/Base';
+import CheckoutOrders from '@/views/checkout/Orders';
+import CheckoutAuth from '@/views/checkout/Auth';
 
 let routes = [
   {
@@ -37,25 +38,36 @@ let routes = [
     name: 'signin',
     path: '/signin',
     component: SignIn,
-    async beforeEnter(from, to, next) {
-      await store.getters['user/ready'];
-      store.getters['user/isLogin'] ? next({ name: 'office' }) : next();
-    },
+    // async beforeEnter(from, to, next) {
+    //   await store.getters['user/ready'];
+    //   store.getters['user/isLogin'] ? next({ name: 'checkout' }) : next();
+    // },
   },
   {
-    path: '/office',
-    component: OfficeBase,
-    meta: { auth: true },
+    path: '/checkout',
+    component: CheckoutBase,
+
     children: [
       {
         path: '',
-        component: OfficeIndex,
-        name: 'office',
+        component: CheckoutIndex,
+        name: 'checkout',
+        meta: { authCheckout: true },
       },
       {
         path: 'orders',
-        component: OfficeOrders,
-        name: 'office-orders',
+        component: CheckoutOrders,
+        name: 'checkout-orders',
+        meta: { authCheckout: true },
+      },
+      {
+        path: 'auth',
+        component: CheckoutAuth,
+        name: 'checkout-auth',
+        async beforeEnter(from, to, next) {
+          await store.getters['user/ready'];
+          store.getters['user/isLogin'] ? next({ name: 'checkout' }) : next();
+        },
       },
     ],
   },
@@ -71,9 +83,12 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.auth) {
+  if (to.meta.auth && !auth.isLoggedIn()) {
     await store.getters['user/ready'];
-    store.getters['user/isLogin'] ? next() : next({ name: 'login' });
+    store.getters['user/isLogin'] ? next() : next({ name: 'signin' });
+  } else if (to.meta.authCheckout) {
+    await store.getters['user/ready'];
+    store.getters['user/isLogin'] ? next() : next({ name: 'checkout-auth' });
   } else {
     next();
   }

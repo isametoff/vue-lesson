@@ -11,10 +11,9 @@ export async function auth({ login, password, isAuth }) {
 }
 
 export async function logOut({ token }) {
-  let tokenOut = token;
   const config = {
     headers: {
-      Authorization: 'Bearer ' + tokenOut,
+      Authorization: 'Bearer ' + token,
     },
   };
   let { data } = await http.post('auth/logout', '', config);

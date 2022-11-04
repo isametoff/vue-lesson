@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form v-if="!isLogin">
     <div class="was-validated">
       <div>
         <input
@@ -57,6 +57,7 @@ export default {
       'isErrors',
       'isAlertsLogin',
       'isAlertsPassword',
+      'isLogin',
     ]),
     isAuth() {
       return this.isAlertsLogin === true && this.isAlertsPassword === true
@@ -72,7 +73,7 @@ export default {
         password: this.data.password,
         isAuth: this.isAuth,
       });
-      console.log("🚀 ~ file: SignIn.vue ~ line 75 ~ trySignIn ~ auth", data)
+      console.log('🚀 ~ file: SignIn.vue ~ line 75 ~ trySignIn ~ auth', data);
       if (data.access_token) {
         this.data.login = '';
         this.data.password = '';

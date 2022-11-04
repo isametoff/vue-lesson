@@ -28,7 +28,7 @@
     </div>
     <div class="col-4">
       <div class="card">
-        <router-link to="#" class="btn btn-primary m-3">Checkout</router-link>
+        <router-link to="checkout" class="btn btn-primary m-3">Checkout</router-link>
         <hr />
         <!-- <div class="card-body"> -->
         <table class="table-borderless m-2">

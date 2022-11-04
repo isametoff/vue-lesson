@@ -72,7 +72,7 @@ export default {
     ...mapGetters('user', ['userItems', 'isLogin']),
     menuItems() {
       let menu = this.isLogin
-        ? [{ route: 'office', text: 'Office', exact: false }]
+        ? [{ route: 'checkout', text: 'Checkout', exact: false }]
         : [
             { route: 'signin', text: 'Login', exact: false },
             { route: 'signup', text: 'Sign Up', exact: false },

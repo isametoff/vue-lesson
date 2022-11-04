@@ -55,7 +55,7 @@
 <script>
 import { ContentLoader } from 'vue-content-loader';
 import { mapGetters, mapActions } from 'vuex';
-import ProductControls from '@/components/ProductControls';
+import ProductControls from '@/components/ProductControls'; 
 
 export default {
   components: {
