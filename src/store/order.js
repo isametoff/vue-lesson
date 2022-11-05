@@ -3,22 +3,32 @@ import * as orderApi from '@/api/order.js';
 export default {
   namespaced: true,
   state: {
-    order:[],
     token: localStorage.getItem('access_token') || '',
   },
-  getters: {},
+  getters: {
+    isToken: (state) => state.token !== '',
+  },
   mutations: {},
   actions: {
-    async autoLogin({ commit, state, getters }) {
+    async order({ commit, state, getters }, { order }) {
+      let orderJson = JSON.stringify(order);
+      let ord = [order];
+      console.log("🚀 ~ file: order.js ~ line 17 ~ order ~ ord", ord)
+      console.log('🚀 ~ file: order.js ~ line 13 ~ order ~ { order }', {
+        order,
+      });
       let token = state.token;
-      let {} = state.order;
-      
-      if (getters.isToken) {
-        let { res, data } = await orderApi.check({ token });
 
-        if (res === true) {
-          commit('setUser', data);  
-        }
+      console.log(
+        '🚀 ~ file: order.js ~ line 17 ~ order ~ getters.isToken',
+        getters.isToken
+      );
+      if (getters.isToken) {
+        let { res, data } = await orderApi.order({ token, order: ord });
+        console.log('🚀 ~ file: order.js ~ line 18 ~ order ~ { res, data }', {
+          res,
+          data,
+        });
       }
     },
   },

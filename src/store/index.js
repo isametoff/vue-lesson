@@ -4,6 +4,7 @@ import cart from './cart';
 import products from './products';
 import user from './user';
 import alerts from './alerts';
+import order from './order';
 
 import { addResponseHandler } from '@/api/http';
 
@@ -13,6 +14,7 @@ const store = createStore({
     products,
     user,
     alerts,
+    order,
   },
   strict: process.env.NODE_ENV !== 'production',
 });

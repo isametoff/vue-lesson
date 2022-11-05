@@ -65,16 +65,9 @@ export default {
   actions: {
     async autoLogin({ commit, state, getters }) {
       let token = state.token;
-      console.log(
-        '🚀 ~ file: user.js ~ line 67 ~ autoLogin ~ getters.isToken',
-        getters.isToken
-      );
+
       if (getters.isToken) {
         let { res, data } = await authApi.check({ token });
-        console.log(
-          '🚀 ~ file: user.js ~ line 68 ~ autoLogin ~ { res, data }',
-          { res, data }
-        );
 
         if (res === true) {
           commit('setUser', data);
@@ -176,10 +169,6 @@ export default {
     async logOut({ state, commit, dispatch }) {
       let token = state.token;
       let { res, data } = await authApi.logOut({ token });
-      console.log('🚀 ~ file: user.js ~ line 178 ~ logOut ~ { res, data }', {
-        res,
-        data,
-      });
 
       if (res === true && data.logout === true) {
         commit('setUser', []);

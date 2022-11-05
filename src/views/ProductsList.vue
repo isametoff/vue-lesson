@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Products</h1>
-    <div class="row" v-if="noProducts||!productList">
+    <div class="row" v-if="noProducts || !productList">
       <div class="col col-sm-4 mb-3 mt-3" v-for="idx in 6" :key="idx">
         <div class="card">
           <div class="card-body">
@@ -55,7 +55,7 @@
 <script>
 import { ContentLoader } from 'vue-content-loader';
 import { mapGetters, mapActions } from 'vuex';
-import ProductControls from '@/components/ProductControls'; 
+import ProductControls from '@/components/ProductControls';
 
 export default {
   components: {

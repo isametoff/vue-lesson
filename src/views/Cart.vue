@@ -28,7 +28,15 @@
     </div>
     <div class="col-4">
       <div class="card">
-        <router-link to="checkout" class="btn btn-primary m-3">Checkout</router-link>
+        <!-- <router-link
+          to="checkout"
+          @click="tryCheckout()"
+          class="btn btn-primary m-3"
+          >Checkout</router-link
+        > -->
+        <a href="#" @click="tryCheckout()" class="btn btn-primary m-3"
+          >Checkout</a
+        >
         <hr />
         <!-- <div class="card-body"> -->
         <table class="table-borderless m-2">
@@ -68,9 +76,10 @@ export default {
     ...mapGetters('products', ['isRest', 'maxRest']),
     ...mapGetters('cart', {
       products: 'productsDetailed',
-      oneProduct: 'oneProduct',
+      oneProductCart: 'oneProduct',
       cartTotal: 'totalCnt',
       cartSumTotal: 'totalSum',
+      allProducts: 'allProducts',
     }),
     cartCnt() {
       return this.oneProduct(this.$route.params.id)
@@ -83,6 +92,11 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['setCnt']),
+    ...mapActions('order', ['order']),
+    async tryCheckout() {
+      let data = await this.order({ order: this.allProducts });
+      console.log('🚀 ~ file: Cart.vue ~ line 97 ~ tryCheckout ~ data', data);
+    },
   },
 };
 </script>
