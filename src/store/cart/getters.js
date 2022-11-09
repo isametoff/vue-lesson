@@ -10,7 +10,7 @@ export default {
       return total + pr.price * pr.cnt;
     }, 0);
   },
-  totalCnt: (state) => state.products?.length,
+  totalCnt: (state) => state.products?.length, 
   oneProduct: (state) => (id) =>
     state.products?.find((product) => (product.id === id ? product : 0)),
   inProccess: (state) => (id) => state.proccessId.includes(id),

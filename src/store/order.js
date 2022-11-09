@@ -3,33 +3,65 @@ import * as orderApi from '@/api/order.js';
 export default {
   namespaced: true,
   state: {
-    token: localStorage.getItem('access_token') || '',
+    order: [],
+    orderStore: [],
+    accessToken: localStorage.getItem('access_token') || '',
+    tokenPay: localStorage.getItem('token_pay') || false,
+    totalPrice: 0,
   },
   getters: {
+    allOrderItems: (state) =>
+      state.orderStore?.length > 0 ? state.orderStore : false,
+    isOrderStore: (state) => state.orderStore?.length > 0,
+    // valueTokenPay: (state, getters) => state.tokenPay,
+    valueTokenPay: (state, getters) =>
+      getters.isOrderStore ? false : state.tokenPay,
+    totalOrderItems: (state) => state.order?.length,
+    orderItems: (state) => state.order,
+    totalPrice: (state) => state.totalPrice,
+    totalPrice: (state) => state.totalPrice,
     isToken: (state) => state.token !== '',
+    isTokenPay: (state) => state.token !== false,
   },
-  mutations: {},
+  mutations: {
+    addOrder(state, { data }) {
+      state.order = data;
+    },
+    addOrderStore(state, { order }) {
+      state.orderStore = order;
+    },
+    addTokenPay(state, { data }) {
+      state.tokenPay = data;
+    },
+    addTotalPrice(state, { data }) {
+      state.totalPrice = data;
+    },
+  },
   actions: {
-    async order({ commit, state, getters }, { order }) {
-      let orderJson = JSON.stringify(order);
-      let ord = [order];
-      console.log("🚀 ~ file: order.js ~ line 17 ~ order ~ ord", ord)
-      console.log('🚀 ~ file: order.js ~ line 13 ~ order ~ { order }', {
-        order,
-      });
-      let token = state.token;
+    async order({ commit, state, getters }) {
+      let token = state.accessToken;
 
-      console.log(
-        '🚀 ~ file: order.js ~ line 17 ~ order ~ getters.isToken',
-        getters.isToken
-      );
-      if (getters.isToken) {
-        let { res, data } = await orderApi.order({ token, order: ord });
-        console.log('🚀 ~ file: order.js ~ line 18 ~ order ~ { res, data }', {
-          res,
-          data,
-        });
+      let { data, res } = await orderApi.order({
+        tokenPay: getters.valueTokenPay,
+        token,
+        order: getters.allOrderItems,
+      });
+
+      if (data.tokenPay && data.orderItems.length > 0) {
+        localStorage.setItem('token_pay', '');
+        localStorage.setItem('token_pay', data.tokenPay);
+        commit('addTokenPay', { data: data.tokenPay });
       }
+      if (res === true) {
+        commit('addOrderStore', []);
+        commit('addOrder', { data: data.orderItems });
+        commit('addTotalPrice', { data: data.totalPrice });
+      }
+
+      return res;
+    },
+    addOrderStore({ commit }, { order }) {
+      commit('addOrderStore', { order });
     },
   },
 };

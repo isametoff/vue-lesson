@@ -73,7 +73,6 @@ export default {
         password: this.data.password,
         isAuth: this.isAuth,
       });
-      console.log('🚀 ~ file: SignIn.vue ~ line 75 ~ trySignIn ~ auth', data);
       if (data.access_token) {
         this.data.login = '';
         this.data.password = '';

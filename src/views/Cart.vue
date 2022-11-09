@@ -28,12 +28,6 @@
     </div>
     <div class="col-4">
       <div class="card">
-        <!-- <router-link
-          to="checkout"
-          @click="tryCheckout()"
-          class="btn btn-primary m-3"
-          >Checkout</router-link
-        > -->
         <a href="#" @click="tryCheckout()" class="btn btn-primary m-3"
           >Checkout</a
         >
@@ -92,10 +86,13 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['setCnt']),
-    ...mapActions('order', ['order']),
+    ...mapActions('order', ['order', 'addOrderStore']),
     async tryCheckout() {
-      let data = await this.order({ order: this.allProducts });
-      console.log('🚀 ~ file: Cart.vue ~ line 97 ~ tryCheckout ~ data', data);
+      this.addOrderStore({ order: this.allProducts });
+      let res = await this.order();
+      if (res) {
+        // this.$router.push({ name: 'checkout' });
+      }
     },
   },
 };
