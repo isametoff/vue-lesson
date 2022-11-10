@@ -16,12 +16,12 @@
             <thead>
               <tr>
                 <th scope="col">Your order</th>
-                <td class="text-end text-muted">{{ totalOrderItems }}</td>
+                <td class="text-end text-muted">{{ lengthOrderItems }}</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="pt-3">Products({{ totalOrderItems }})</td>
+                <td class="pt-3">Products({{ lengthOrderItems }})</td>
                 <td class="text-end pt-3 fw-bolder">{{ totalPrice }}</td>
               </tr>
               <hr />
@@ -44,13 +44,13 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   components: {},
   mounted() {
-    this.order();
+    this.load();
   },
   computed: {
-    ...mapGetters('order', ['totalPrice', 'totalOrderItems', 'totalPrice']),
+    ...mapGetters('order', ['totalPrice', 'lengthOrderItems', 'totalPrice']),
   },
   methods: {
-    ...mapActions('order', ['order']),
+    ...mapActions('order', ['load']),
   },
 };
 </script>

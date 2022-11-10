@@ -91,7 +91,7 @@ export default {
       this.addOrderStore({ order: this.allProducts });
       let res = await this.order();
       if (res) {
-        // this.$router.push({ name: 'checkout' });
+        this.$router.push({ name: 'checkout' });
       }
     },
   },
