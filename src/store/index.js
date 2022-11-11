@@ -24,10 +24,8 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
-    console.log('🚀 ~ file: index.js ~ line 25 ~ error', error.response);
     let config = error.response.config;
     let errorsRequest = error.response.data;
-    console.log("🚀 ~ file: index.js ~ line 27 ~ error.response.config", error)
 
     if ('errorAlert' in config) {
       let { errorAlert } = config;

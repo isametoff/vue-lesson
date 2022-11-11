@@ -3,7 +3,7 @@
   <hr />
   <div class="row">
     <div class="col-8">
-      <table class="table table-bordered">
+      <table v-if="isProductsCart" class="table table-bordered">
         <thead>
           <tr>
             <th>Title</th>
@@ -25,12 +25,24 @@
           </tr>
         </tbody>
       </table>
+      <router-link v-else :to="{ name: 'catalog' }"
+        >The shopping cart is empty, select products
+      </router-link>
     </div>
     <div class="col-4">
       <div class="card">
-        <a href="#" @click="tryCheckout()" class="btn btn-primary m-3"
-          >Checkout</a
+        <button
+          :disabled="!isToken || !isProductsCart"
+          @click="tryCheckout()"
+          class="btn btn-primary m-3"
         >
+          Checkout
+        </button>
+        <p class="text-center" v-if="!isToken">
+          To pay,
+          <router-link :to="{ name: 'signin' }">log in </router-link>
+        </p>
+
         <hr />
         <!-- <div class="card-body"> -->
         <table class="table-borderless m-2">
@@ -68,12 +80,14 @@ export default {
   },
   computed: {
     ...mapGetters('products', ['isRest', 'maxRest']),
+    ...mapGetters('user', ['isToken']),
     ...mapGetters('cart', {
       products: 'productsDetailed',
       oneProductCart: 'oneProduct',
       cartTotal: 'totalCnt',
       cartSumTotal: 'totalSum',
       allProducts: 'allProducts',
+      isProductsCart: 'isProductsCart',
     }),
     cartCnt() {
       return this.oneProduct(this.$route.params.id)
@@ -88,10 +102,12 @@ export default {
     ...mapActions('cart', ['setCnt']),
     ...mapActions('order', ['order', 'addOrderStore']),
     async tryCheckout() {
-      this.addOrderStore({ order: this.allProducts });
-      let res = await this.order();
-      if (res) {
-        this.$router.push({ name: 'checkout' });
+      if (this.isToken && this.isProductsCart) {
+        this.addOrderStore({ order: this.allProducts });
+        let res = await this.order();
+        if (res) {
+          this.$router.push({ name: 'checkout' });
+        }
       }
     },
   },

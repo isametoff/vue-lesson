@@ -5,16 +5,16 @@ export default {
   state: {
     order: [],
     orderStore: [],
-    accessToken: localStorage.getItem('access_token') || '',
-    tokenPay: localStorage.getItem('token_pay') || false,
+    tokenPay: '',
+    // tokenPay: localStorage.getItem('token_pay') || false,
     totalPrice: 0,
   },
   getters: {
     allOrderItems: (state) =>
       state.orderStore?.length > 0 ? state.orderStore : false,
     isOrderStore: (state) => state.orderStore?.length > 0,
-    valueTokenPay: (state, getters) => state.tokenPay,
-    valueAccessToken: (state, getters) => state.accessToken,
+    valueTokenPay: (state, getters) =>
+      state.tokenPay ? state.tokenPay : localStorage.getItem('token_pay'),
     lengthOrderItems: (state) => state.order?.length,
     orderItems: (state) => state.order,
     totalPrice: (state) => state.totalPrice,
@@ -37,9 +37,10 @@ export default {
     },
   },
   actions: {
-    async order({ commit, state, getters }) {
+    async order({ commit, rootGetters, getters, rootState }) {
+      console.log("🚀 ~ file: order.js ~ line 45 ~ order ~ rootGetters['user/valueToken']", rootGetters['user/valueToken'])
       let { data, res } = await orderApi.order({
-        token: getters.valueAccessToken,
+        token: rootGetters['user/valueToken'],
         order: getters.allOrderItems,
       });
 
@@ -56,10 +57,10 @@ export default {
 
       return res;
     },
-    async load({ commit, state, getters }) {
+    async load({ commit, state, getters, rootGetters }) {
       let { data, res } = await orderApi.load({
         tokenPay: getters.valueTokenPay,
-        token: getters.valueAccessToken,
+        token: rootGetters['user/valueToken'],
       });
 
       if (data.tokenPay && data.orderItems.length > 0) {

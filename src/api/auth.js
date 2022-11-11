@@ -22,7 +22,6 @@ export async function logOut({ token }) {
 }
 
 export async function check({ token }) {
-  console.log('🚀 ~ file: auth.js ~ line 14 ~ check ~ { token }', { token });
   let { data } = await http.post('auth/me', { token });
   return data;
 }

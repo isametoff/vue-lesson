@@ -12,10 +12,13 @@ export default {
       password_confirmation: '',
       error: '',
     },
-    token: localStorage.getItem('access_token') || '',
+    token: '',
+    // token: localStorage.getItem('access_token') || '',
   },
   getters: {
-    isToken: (state) => state.token !== null,
+    valueToken: (state) =>
+      state?.token ? state.token : localStorage.getItem('access_token'),
+    isToken: (state) => state.token !== '',
     isLogin: (state) => (state.user?.login !== undefined ? true : false),
     allAlerts: (state) => state.errors,
     userItems: (state) => state.user,
@@ -34,7 +37,7 @@ export default {
     setUser(state, user) {
       state.user = user;
     },
-    setToken(state, token) {
+    setToken(state, { token }) {
       state.token = token;
     },
     cleanErrors(state) {
@@ -63,16 +66,17 @@ export default {
     },
   },
   actions: {
-    async autoLogin({ commit, state, getters }) {
-      let token = state.token;
-
-      if (getters.isToken) {
-        let { res, data } = await authApi.check({ token });
+    async autoLogin({ commit, getters, state }) {
+        let { res, data } = await authApi.check({ token: getters.valueToken });
+        console.log(
+          '🚀 ~ file: user.js ~ line 72 ~ autoLogin ~ { res, data }',
+          { res, data }
+        );
 
         if (res === true) {
           commit('setUser', data);
         }
-      }
+      
     },
 
     async registration(
@@ -130,12 +134,14 @@ export default {
 
     async auth({ getters, state, commit }, { login, password, isAuth }) {
       if (!getters.isLogin) {
+        
         let { res, data } = await authApi.auth({ login, password, isAuth });
 
         let { access_token } = data;
+
         if (access_token && res === true) {
           localStorage.setItem('access_token', access_token);
-          commit('setToken', access_token);
+          commit('setToken', { token: access_token });
         }
         let { error } = data;
         commit('addAlertsError', {
@@ -162,16 +168,17 @@ export default {
             password,
           });
         }
+
         return data;
       }
     },
 
-    async logOut({ state, commit, dispatch }) {
-      let token = state.token;
-      let { res, data } = await authApi.logOut({ token });
+    async logOut({ getters, commit, dispatch }) {
+      let { res, data } = await authApi.logOut({ token: getters.valueToken });
 
       if (res === true && data.logout === true) {
         commit('setUser', []);
+        commit('setToken', { token: '' });
         localStorage.setItem('access_token', '');
         dispatch(
           'alerts/add',

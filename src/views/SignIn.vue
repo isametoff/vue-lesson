@@ -83,10 +83,13 @@ export default {
   watch: {
     data: {
       handler() {
-        this.auth({
-          login: this.data.login,
-          password: this.data.password,
-        });
+        this.auth(
+          {
+            login: this.data.login,
+            password: this.data.password,
+          },
+          3000
+        );
       },
       deep: true,
     },
