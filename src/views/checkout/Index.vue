@@ -16,18 +16,18 @@
             <thead>
               <tr>
                 <th scope="col">Your order</th>
-                <td class="text-end text-muted">{{ lengthOrderItems }}</td>
+                <td class="text-end text-muted">{{ lengthProductsItems }}</td>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="pt-3">Products({{ lengthOrderItems }})</td>
-                <td class="text-end pt-3 fw-bolder">{{ totalPrice }}</td>
+                <td class="pt-3">Products({{ lengthProductsItems }})</td>
+                <td class="text-end pt-3 fw-bolder">{{ orderItems.totalPrice }}</td>
               </tr>
               <hr />
               <tr>
                 <td class="pt-3 fw-bold">Total cost</td>
-                <td class="text-end pt-3 fw-bolder">{{ totalPrice }}</td>
+                <td class="text-end pt-3 fw-bolder">{{ orderItems.totalPrice }}</td>
               </tr>
             </tbody>
           </table>
@@ -47,7 +47,7 @@ export default {
     this.load();
   },
   computed: {
-    ...mapGetters('order', ['totalPrice', 'lengthOrderItems', 'totalPrice']),
+    ...mapGetters('order', ['lengthOrderItems', 'orderItems','lengthProductsItems']),
   },
   methods: {
     ...mapActions('order', ['load']),

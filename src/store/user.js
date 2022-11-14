@@ -67,16 +67,13 @@ export default {
   },
   actions: {
     async autoLogin({ commit, getters, state }) {
-        let { res, data } = await authApi.check({ token: getters.valueToken });
-        console.log(
-          '🚀 ~ file: user.js ~ line 72 ~ autoLogin ~ { res, data }',
-          { res, data }
-        );
-
-        if (res === true) {
-          commit('setUser', data);
-        }
-      
+      let { res, data } = await authApi.check({ token: getters.valueToken });
+      if (res === true) {
+        commit('setToken', { token: getters.valueToken });
+      }
+      if (res === true) {
+        commit('setUser', data);
+      }
     },
 
     async registration(
@@ -134,7 +131,6 @@ export default {
 
     async auth({ getters, state, commit }, { login, password, isAuth }) {
       if (!getters.isLogin) {
-        
         let { res, data } = await authApi.auth({ login, password, isAuth });
 
         let { access_token } = data;

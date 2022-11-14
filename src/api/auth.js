@@ -6,7 +6,7 @@ export async function auth({ login, password, isAuth }) {
     password: password,
     isAuth: isAuth,
   });
-
+  
   return data;
 }
 
@@ -17,7 +17,7 @@ export async function logOut({ token }) {
     },
   };
   let { data } = await http.post('auth/logout', '', config);
-
+  
   return data;
 }
 
