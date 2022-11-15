@@ -4,6 +4,7 @@ export default {
   namespaced: true,
   state: {
     order: [],
+    orders: [],
     orderStore: [],
     tokenPay: '',
     totalPrice: 0,
@@ -14,15 +15,19 @@ export default {
     isOrderStore: (state) => state.orderStore?.length > 0,
     valueTokenPay: (state, getters) =>
       state.tokenPay ? state.tokenPay : localStorage.getItem('token_pay'),
-    lengthOrderItems: (state) => state.order?.length,
+    lengthOrderItem: (state) => state.order?.length,
     lengthProductsItems: (state) => state.order?.products?.length,
-    orderItems: (state) => state.order,
+    orderItem: (state) => state.order,
+    orderItems: (state) => state.orders,
     isToken: (state) => state.token !== '',
     isTokenPay: (state) => state.token !== false,
   },
   mutations: {
     addOrder(state, { data }) {
       state.order = data;
+    },
+    addOrders(state, { data }) {
+      state.orders = data;
     },
     addOrderStore(state, { order }) {
       state.orderStore = order;
@@ -64,21 +69,17 @@ export default {
       }
       if (res === true) {
         commit('addOrderStore', []);
-        commit('addOrder', { data: data.orderItem[0] });
+        commit('addOrder', { data: data.orderItem });
         commit('addTotalPrice', '');
       }
-      console.log(
-        '🚀 ~ file: order.js ~ line 67 ~ load ~ { tokenPay }',
-        state.order
-      );
 
       return res;
     },
     async loadAll({ commit, state, getters, rootGetters }) {
       let { data, res } = await orderApi.loadAll({
-        tokenPay: getters.valueTokenPay,
         token: rootGetters['user/valueToken'],
       });
+      
       if (data.tokenPay && data.orderItems.length > 0) {
         localStorage.setItem('token_pay', '');
         localStorage.setItem('token_pay', data.tokenPay);
@@ -86,13 +87,9 @@ export default {
       }
       if (res === true) {
         commit('addOrderStore', []);
-        commit('addOrder', { data: data.orderItem[0] });
+        commit('addOrders', { data: data.orderItems });
         commit('addTotalPrice', '');
       }
-      console.log(
-        '🚀 ~ file: order.js ~ line 67 ~ load ~ { tokenPay }',
-        state.order
-      );
 
       return res;
     },

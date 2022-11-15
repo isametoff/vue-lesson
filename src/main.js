@@ -2,8 +2,16 @@ import { createApp } from 'vue';
 import App from './App';
 import store from './store';
 import router from './router';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-let app = createApp(App).use(store).use(router);
+library.add(fas);
+
+let app = createApp(App)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .use(store)
+  .use(router);
 
 store.dispatch('user/autoLogin');
 store.dispatch('cart/load');
