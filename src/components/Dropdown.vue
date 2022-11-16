@@ -4,26 +4,30 @@
       @click.prevent="toShow()"
       icon="fa-solid fa-ellipsis-vertical"
     />
-    
+
     <div class="btn-group dropstart">
       <ul
         class="dropdown-menu"
         :class="{ show: showDropdown === true }"
         style="inset: 0px 10px auto auto"
       >
-      
         <li>
           <a @click.prevent="toShow()" class="dropdown-item" href="#">Delete</a>
         </li>
         <li @click.prevent="toShow()">
-          <a class="dropdown-item" href="#">Repeat</a>
+          <a @click="tryCheckout()" class="dropdown-item" href="#">Repeat</a>
         </li>
       </ul>
     </div>
   </td>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
+  props: {
+    tokenPay: String,
+  },
   data() {
     return {
       showDropdown: false,
@@ -31,12 +35,21 @@ export default {
   },
   computed: {},
   methods: {
+    ...mapActions('order', ['repeatOrder']),
     toShow() {
       this.showDropdown = !this.showDropdown;
+    },
+    async tryCheckout() {
       console.log(
-        '🚀 ~ file: Dropdown.vue ~ line 28 ~ showDropdown ~ this.showDropdown',
-        this.showDropdown
+        '🚀 ~ file: Dropdown.vue ~ line 45 ~ tryCheckout ~ this.tokenPay',
+        this.tokenPay
       );
+      if (this.tokenPay) {
+        let res = await this.repeatOrder({ tokenPay: this.tokenPay });
+        if (res) {
+          this.$router.push({ name: 'checkout' });
+        }
+      }
     },
   },
 };

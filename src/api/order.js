@@ -12,6 +12,19 @@ export async function order({ token, order }) {
 
   return data;
 }
+export async function repeat({ token, tokenPay }) {
+  console.log("🚀 ~ file: order.js ~ line 16 ~ repeat ~ { token, tokenPay }", { token, tokenPay })
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  let { data } = await http.post('order/repeat', { tokenPay }, config);
+
+  return data;
+}
 export async function load({ tokenPay, token }) {
   const config = {
     headers: {

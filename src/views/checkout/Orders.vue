@@ -35,7 +35,7 @@
               </td>
               <td>${{ order.totalPrice }}.00</td>
               <td>{{ order.created }}</td>
-              <Dropdown />
+              <Dropdown :tokenPay="order.tokenPay" />
             </tr>
           </tbody>
         </table>
@@ -70,7 +70,6 @@ export default {
 };
 </script>
 <style scoped>
-/* @import url('https://fonts.googleapis.com/css?family=Assistant'); */
 body {
   background: #eee;
   font-family: Assistant, sans-serif;

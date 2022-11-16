@@ -57,6 +57,35 @@ export default {
 
       return res;
     },
+    async repeatOrder(
+      { commit, rootGetters, getters, rootState },
+      { tokenPay }
+    ) {
+      let { res } = await orderApi.repeat({
+        tokenPay: tokenPay,
+        token: rootGetters['user/valueToken'],
+      });
+
+      if (res === true) {
+        commit('addOrderStore', []);
+      }
+
+      return res;
+    },
+    async deleteOrder(
+      { commit, rootGetters, getters, rootState },
+      { tokenPay }
+    ) {
+      let { res } = await orderApi.delete({
+        tokenPay: tokenPay,
+        token: rootGetters['user/valueToken'],
+      });
+
+      if (res === true) {
+      }
+
+      return res;
+    },
     async load({ commit, state, getters, rootGetters }) {
       let { data, res } = await orderApi.load({
         tokenPay: getters.valueTokenPay,
@@ -79,7 +108,7 @@ export default {
       let { data, res } = await orderApi.loadAll({
         token: rootGetters['user/valueToken'],
       });
-      
+
       if (data.tokenPay && data.orderItems.length > 0) {
         localStorage.setItem('token_pay', '');
         localStorage.setItem('token_pay', data.tokenPay);
