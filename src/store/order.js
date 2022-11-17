@@ -76,7 +76,7 @@ export default {
       { commit, rootGetters, getters, rootState },
       { tokenPay }
     ) {
-      let { res } = await orderApi.delete({
+      let { res } = await orderApi.deleteOrder({
         tokenPay: tokenPay,
         token: rootGetters['user/valueToken'],
       });

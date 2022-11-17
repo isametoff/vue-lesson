@@ -12,9 +12,9 @@
         style="inset: 0px 10px auto auto"
       >
         <li>
-          <a @click.prevent="toShow()" class="dropdown-item" href="#">Delete</a>
+          <a @click="tryDeleteOrder()" class="dropdown-item" href="#">Delete</a>
         </li>
-        <li @click.prevent="toShow()">
+        <li>
           <a @click="tryCheckout()" class="dropdown-item" href="#">Repeat</a>
         </li>
       </ul>
@@ -35,19 +35,25 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions('order', ['repeatOrder']),
+    ...mapActions('order', ['repeatOrder', 'deleteOrder', 'loadAll']),
     toShow() {
       this.showDropdown = !this.showDropdown;
     },
     async tryCheckout() {
-      console.log(
-        '🚀 ~ file: Dropdown.vue ~ line 45 ~ tryCheckout ~ this.tokenPay',
-        this.tokenPay
-      );
       if (this.tokenPay) {
         let res = await this.repeatOrder({ tokenPay: this.tokenPay });
+        this.toShow()
         if (res) {
-          this.$router.push({ name: 'checkout' });
+          this.loadAll();
+        }
+      }
+    },
+    async tryDeleteOrder() {
+      if (this.tokenPay) {
+        let res = await this.deleteOrder({ tokenPay: this.tokenPay });
+        this.toShow()
+        if (res) {
+          this.loadAll();
         }
       }
     },
