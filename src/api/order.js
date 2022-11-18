@@ -12,7 +12,7 @@ export async function order({ token, order }) {
 
   return data;
 }
-export async function repeat({ token, tokenPay }) {
+export async function repeat({ token, orderId }) {
   const config = {
     headers: {
       Authorization: 'Bearer ' + token,
@@ -20,11 +20,11 @@ export async function repeat({ token, tokenPay }) {
     },
   };
 
-  let { data } = await http.post('order/repeat', { tokenPay }, config);
+  let { data } = await http.post('order/repeat', { orderId }, config);
 
   return data;
 }
-export async function deleteOrder({ token, tokenPay }) {
+export async function deleteOrder({ token, orderId }) {
   const config = {
     headers: {
       Authorization: 'Bearer ' + token,
@@ -32,18 +32,18 @@ export async function deleteOrder({ token, tokenPay }) {
     },
   };
 
-  let { data } = await http.post('order/delete', { tokenPay }, config);
+  let { data } = await http.post('order/delete', { orderId }, config);
 
   return data;
 }
-export async function load({ tokenPay, token }) {
+export async function load({ orderId, token }) {
   const config = {
     headers: {
       Authorization: 'Bearer ' + token,
       'Content-Type': 'multipart/form-data',
     },
   };
-  let { data } = await http.post('order/load', { tokenPay }, config);
+  let { data } = await http.post('order/load', { orderId }, config);
 
   return data;
 }

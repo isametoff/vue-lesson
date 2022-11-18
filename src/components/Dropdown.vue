@@ -26,7 +26,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   props: {
-    tokenPay: String,
+    orderId: String,
   },
   data() {
     return {
@@ -40,18 +40,18 @@ export default {
       this.showDropdown = !this.showDropdown;
     },
     async tryCheckout() {
-      if (this.tokenPay) {
-        let res = await this.repeatOrder({ tokenPay: this.tokenPay });
-        this.toShow()
+      if (this.orderId) {
+        let res = await this.repeatOrder({ orderId: this.orderId });
+        this.toShow();
         if (res) {
           this.loadAll();
         }
       }
     },
     async tryDeleteOrder() {
-      if (this.tokenPay) {
-        let res = await this.deleteOrder({ tokenPay: this.tokenPay });
-        this.toShow()
+      if (this.orderId) {
+        let res = await this.deleteOrder({ orderId: this.orderId });
+        this.toShow();
         if (res) {
           this.loadAll();
         }

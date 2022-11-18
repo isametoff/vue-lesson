@@ -6,21 +6,21 @@ export default {
     order: [],
     orders: [],
     orderStore: [],
-    tokenPay: '',
+    orderId: '',
     totalPrice: 0,
   },
   getters: {
     allOrderItems: (state) =>
       state.orderStore?.length > 0 ? state.orderStore : false,
     isOrderStore: (state) => state.orderStore?.length > 0,
-    valueTokenPay: (state, getters) =>
-      state.tokenPay ? state.tokenPay : localStorage.getItem('token_pay'),
+    valueOrderId: (state, getters) =>
+      state.orderId ? state.orderId : localStorage.getItem('token_pay'),
     lengthOrderItem: (state) => state.order?.length,
     lengthProductsItems: (state) => state.order?.products?.length,
     orderItem: (state) => state.order,
     orderItems: (state) => state.orders,
-    isToken: (state) => state.token !== '',
-    isTokenPay: (state) => state.token !== false,
+    isToken: (state) => state.orderId !== '',
+    isOrderId: (state) => state.orderId !== false,
   },
   mutations: {
     addOrder(state, { data }) {
@@ -32,8 +32,8 @@ export default {
     addOrderStore(state, { order }) {
       state.orderStore = order;
     },
-    addTokenPay(state, { data }) {
-      state.tokenPay = data;
+    addOrderId(state, { data }) {
+      state.orderId = data;
     },
     addTotalPrice(state, { data }) {
       state.totalPrice = data;
@@ -46,10 +46,10 @@ export default {
         order: getters.allOrderItems,
       });
 
-      if (data.tokenPay) {
+      if (data.orderId) {
         // localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.tokenPay);
-        commit('addTokenPay', { data: data.tokenPay });
+        localStorage.setItem('token_pay', data.orderId);
+        commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
         commit('addOrderStore', []);
@@ -59,10 +59,10 @@ export default {
     },
     async repeatOrder(
       { commit, rootGetters, getters, rootState },
-      { tokenPay }
+      { orderId }
     ) {
       let { res } = await orderApi.repeat({
-        tokenPay: tokenPay,
+        orderId: orderId,
         token: rootGetters['user/valueToken'],
       });
 
@@ -74,10 +74,10 @@ export default {
     },
     async deleteOrder(
       { commit, rootGetters, getters, rootState },
-      { tokenPay }
+      { orderId }
     ) {
       let { res } = await orderApi.deleteOrder({
-        tokenPay: tokenPay,
+        orderId: orderId,
         token: rootGetters['user/valueToken'],
       });
 
@@ -88,13 +88,13 @@ export default {
     },
     async load({ commit, state, getters, rootGetters }) {
       let { data, res } = await orderApi.load({
-        tokenPay: getters.valueTokenPay,
+        orderId: getters.valueorderId,
         token: rootGetters['user/valueToken'],
       });
-      if (data.tokenPay && data.orderItems.length > 0) {
+      if (data.orderId && data.orderItems.length > 0) {
         localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.tokenPay);
-        commit('addTokenPay', { data: data.tokenPay });
+        localStorage.setItem('token_pay', data.orderId);
+        commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
         commit('addOrderStore', []);
@@ -109,10 +109,10 @@ export default {
         token: rootGetters['user/valueToken'],
       });
 
-      if (data.tokenPay && data.orderItems.length > 0) {
+      if (data.orderId && data.orderItems.length > 0) {
         localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.tokenPay);
-        commit('addTokenPay', { data: data.tokenPay });
+        localStorage.setItem('token_pay', data.orderId);
+        commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
         commit('addOrderStore', []);
