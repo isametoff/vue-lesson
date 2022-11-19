@@ -14,7 +14,11 @@ export default {
       state.orderStore?.length > 0 ? state.orderStore : false,
     isOrderStore: (state) => state.orderStore?.length > 0,
     valueOrderId: (state, getters) =>
-      state.orderId ? state.orderId : localStorage.getItem('token_pay'),
+      state.orderId
+        ? state.orderId
+        : localStorage.getItem('order_id') != undefined
+        ? localStorage.getItem('order_id')
+        : false,
     lengthOrderItem: (state) => state.order?.length,
     lengthProductsItems: (state) => state.order?.products?.length,
     orderItem: (state) => state.order,
@@ -47,8 +51,8 @@ export default {
       });
 
       if (data.orderId) {
-        // localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.orderId);
+        // localStorage.setItem('order_id', '');
+        localStorage.setItem('order_id', data.orderId);
         commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
@@ -88,12 +92,15 @@ export default {
     },
     async load({ commit, state, getters, rootGetters }) {
       let { data, res } = await orderApi.load({
-        orderId: getters.valueorderId,
         token: rootGetters['user/valueToken'],
       });
+      console.log('🚀 ~ file: order.js ~ line 94 ~ load ~ { data, res } ', {
+        data,
+        res,
+      });
       if (data.orderId && data.orderItems.length > 0) {
-        localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.orderId);
+        localStorage.setItem('order_id', '');
+        localStorage.setItem('order_id', data.orderId);
         commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
@@ -110,8 +117,8 @@ export default {
       });
 
       if (data.orderId && data.orderItems.length > 0) {
-        localStorage.setItem('token_pay', '');
-        localStorage.setItem('token_pay', data.orderId);
+        localStorage.setItem('order_id', '');
+        localStorage.setItem('order_id', data.orderId);
         commit('addOrderId', { data: data.orderId });
       }
       if (res === true) {
@@ -123,6 +130,9 @@ export default {
       return res;
     },
     addOrderStore({ commit }, { order }) {
+      commit('addOrderStore', { order });
+    },
+    cleanData({ commit }) {
       commit('addOrderStore', { order });
     },
   },

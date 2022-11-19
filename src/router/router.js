@@ -13,6 +13,9 @@ import CheckoutBase from '@/views/checkout/Base';
 import CheckoutOrders from '@/views/checkout/Orders';
 import CheckoutAuth from '@/views/checkout/Auth';
 
+import guest from './middleware/guest';
+import auth from './middleware/auth';
+
 let routes = [
   {
     name: 'catalog',
@@ -38,10 +41,9 @@ let routes = [
     name: 'signin',
     path: '/signin',
     component: SignIn,
-    // async beforeEnter(from, to, next) {
-    //   await store.getters['user/ready'];
-    //   store.getters['user/isLogin'] ? next({ name: 'checkout' }) : next();
-    // },
+    meta: {
+      // middleware: [auth],
+    },
   },
   {
     path: '/checkout',
@@ -52,23 +54,26 @@ let routes = [
         path: '',
         component: CheckoutIndex,
         name: 'checkout',
-        meta: { authCheckout: true },
+        meta: {
+          middleware: [auth],
+        },
       },
       {
         path: 'orders',
         component: CheckoutOrders,
         name: 'checkout-orders',
-        meta: { authCheckout: true },
-      },
-      {
-        path: 'auth',
-        component: CheckoutAuth,
-        name: 'checkout-auth',
-        async beforeEnter(from, to, next) {
-          await store.getters['user/ready'];
-          store.getters['user/isLogin'] ? next({ name: 'checkout' }) : next();
+        meta: {
+          middleware: [auth],
         },
       },
+      // {
+      //   path: 'auth',
+      //   component: CheckoutAuth,
+      //   name: 'checkout-auth',
+      //   meta: {
+      //     middleware: [guest],
+      //   },
+      // },
     ],
   },
   {
@@ -82,16 +87,33 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to.meta.auth && !auth.isLoggedIn()) {
-    await store.getters['user/ready'];
-    store.getters['user/isLogin'] ? next() : next({ name: 'signin' });
-  } else if (to.meta.authCheckout) {
-    await store.getters['user/ready'];
-    store.getters['user/isLogin'] ? next() : next({ name: 'checkout-auth' });
-  } else {
-    next();
+router.beforeEach((to, from, next) => {
+  if (!to.meta.middleware) {
+    return next();
   }
+  const middleware = to.meta.middleware;
+  const context = {
+    to,
+    from,
+    next,
+    store,
+  };
+  return middleware[0]({
+    ...context,
+    next: middlewarePipeline(context, middleware, 1),
+  });
 });
+
+// router.beforeEach(async (to, from, next) => {
+//   if (to.meta.auth && !auth.isLoggedIn()) {
+//     await store.getters['user/isLogin'];
+//     store.getters['user/isLogin'] ? next() : next({ name: 'signin' });
+//   } else if (to.meta.authCheckout) {
+//     await store.getters['user/isLogin'];
+//     store.getters['user/isLogin'] ? next() : next({ name: 'checkout-auth' });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

@@ -35,7 +35,9 @@
                 >{{ item.text }}
               </router-link>
             </li>
-            <li v-if="isLogin" class="nav-item mr-5">Username: {{ userItems.login }}</li>
+            <li v-if="isLogin" class="nav-item mr-5">
+              Username: {{ userItems.login }}
+            </li>
             <li v-if="isLogin" class="nav-item">
               <a @click="logOut()" href="#" class="m-1">Logout</a>
             </li>
@@ -65,6 +67,7 @@ export default {
     menu: [
       { route: 'catalog', text: 'Products' },
       { route: 'cart', text: 'Cart' },
+      { route: 'checkout', text: 'Checkout' },
     ],
   }),
   computed: {

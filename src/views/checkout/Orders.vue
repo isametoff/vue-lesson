@@ -35,7 +35,7 @@
               </td>
               <td>${{ order.totalPrice }}.00</td>
               <td>{{ order.created }}</td>
-              <Dropdown :orderId="order.orderId" />
+              <Dropdown :orderId="order.orderId" :key="order.orderId" />
             </tr>
           </tbody>
         </table>

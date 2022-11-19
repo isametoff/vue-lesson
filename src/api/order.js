@@ -36,14 +36,13 @@ export async function deleteOrder({ token, orderId }) {
 
   return data;
 }
-export async function load({ orderId, token }) {
+export async function load({ token }) {
   const config = {
     headers: {
       Authorization: 'Bearer ' + token,
-      'Content-Type': 'multipart/form-data',
     },
   };
-  let { data } = await http.post('order/load', { orderId }, config);
+  let { data } = await http.post('order/load', '', config);
 
   return data;
 }

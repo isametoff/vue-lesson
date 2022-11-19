@@ -26,7 +26,7 @@ import { mapGetters, mapActions } from 'vuex';
 
 export default {
   props: {
-    orderId: String,
+    orderId: Number,
   },
   data() {
     return {

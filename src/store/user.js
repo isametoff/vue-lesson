@@ -190,5 +190,15 @@ export default {
     cleanErrors({ commit }) {
       commit('cleanErrors');
     },
+    cleanData({ commit, state, getters }) {
+      commit('setUser', []);
+      commit('setToken', '');
+      console.log(
+        '🚀 ~ file: user.js ~ line 197 ~ getters.isLogin',
+        getters.isLogin,
+        state.user,
+        // this.$router.push({ name: 'catalog' })
+      );
+    },
   },
 };

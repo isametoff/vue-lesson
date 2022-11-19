@@ -24,6 +24,14 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
+    console.log(
+      '🚀 ~ file: index.js ~ line 27 ~ ',
+      error.response.data.message
+    );
+    if (error.response.data.message) {
+      store.dispatch('user/cleanData');
+      return { data: { res: 'falseee', message: error.response.data.message } };
+    }
     let config = error.response.config;
     let errorsRequest = error.response.data;
 
