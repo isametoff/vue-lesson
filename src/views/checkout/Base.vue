@@ -2,22 +2,20 @@
   <div class="row">
     <div class="col col-3">
       <ul class="list-group">
-        <template v-if="isLogin">
-          <router-link
-            tag="li"
-            class="list-group-item"
-            :to="{ name: 'checkout' }"
-          >
-            <a>Main screen</a>
-          </router-link>
-          <router-link
-            tag="li"
-            class="list-group-item"
-            :to="{ name: 'checkout-orders' }"
-          >
-            <a>Orders history</a>
-          </router-link></template
+        <router-link
+          tag="li"
+          class="list-group-item"
+          :to="{ name: 'checkout' }"
         >
+          <a>Main screen</a>
+        </router-link>
+        <router-link
+          tag="li"
+          class="list-group-item"
+          :to="{ name: 'checkout-orders' }"
+        >
+          <a>Orders history</a>
+        </router-link>
       </ul>
     </div>
     <div class="col col-9">

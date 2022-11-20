@@ -11,7 +11,10 @@
       price
       {{ productItem.price }}
     </div>
-    <product-controls :key="productItem.id" :id="productItem.id"></product-controls>
+    <product-controls
+      :key="productItem.id"
+      :id="productItem.id"
+    ></product-controls>
   </div>
 </template>
 
@@ -23,6 +26,7 @@ export default {
   components: {
     ProductControls,
   },
+
   computed: {
     ...mapGetters('products', ['product', 'isRest', 'maxRest']),
     ...mapGetters('cart', ['inCart', 'oneProduct']),

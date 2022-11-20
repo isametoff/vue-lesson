@@ -20,6 +20,7 @@ export default {
       state?.token ? state.token : localStorage.getItem('access_token'),
     isToken: (state) => state.token !== '',
     isLogin: (state) => (state.user?.login !== undefined ? true : false),
+    loginValue: (state) => state.user?.login,
     allAlerts: (state) => state.errors,
     userItems: (state) => state.user,
     isAlertsEmail: (state) => (state.errors?.email !== '' ? true : false),
@@ -193,12 +194,6 @@ export default {
     cleanData({ commit, state, getters }) {
       commit('setUser', []);
       commit('setToken', '');
-      console.log(
-        '🚀 ~ file: user.js ~ line 197 ~ getters.isLogin',
-        getters.isLogin,
-        state.user,
-        // this.$router.push({ name: 'catalog' })
-      );
     },
   },
 };

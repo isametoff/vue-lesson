@@ -5,6 +5,7 @@ import products from './products';
 import user from './user';
 import alerts from './alerts';
 import order from './order';
+import router from './router';
 
 import { addResponseHandler } from '@/api/http';
 
@@ -15,6 +16,7 @@ const store = createStore({
     user,
     alerts,
     order,
+    router,
   },
   strict: process.env.NODE_ENV !== 'production',
 });
@@ -24,10 +26,6 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
-    console.log(
-      '🚀 ~ file: index.js ~ line 27 ~ ',
-      error.response.data.message
-    );
     if (error.response.data.message) {
       store.dispatch('user/cleanData');
       return { data: { res: 'falseee', message: error.response.data.message } };

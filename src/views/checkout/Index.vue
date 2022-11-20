@@ -386,7 +386,6 @@ export default {
   },
   methods: {
     ...mapActions('order', ['load']),
-    
   },
 };
 </script>

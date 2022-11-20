@@ -62,7 +62,16 @@ export default {
     ProductControls,
     ContentLoader,
   },
+  mounted() {
+    // console.log(
+    //   '🚀 ~ file: ProductsList.vue ~ line 67 ~ mounted ~ this.isLogin',
+    //   this.$route.name,
+    //   this.isLogin,
+    //   this.loginValue
+    // );
+  },
   computed: {
+    ...mapGetters('user', ['isLogin', 'loginValue']),
     ...mapGetters('products', {
       productList: 'all',
       isRest: 'isRest',

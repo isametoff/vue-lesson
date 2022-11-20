@@ -67,7 +67,6 @@ export default {
     menu: [
       { route: 'catalog', text: 'Products' },
       { route: 'cart', text: 'Cart' },
-      { route: 'checkout', text: 'Checkout' },
     ],
   }),
   computed: {
