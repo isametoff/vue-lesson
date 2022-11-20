@@ -1,7 +1,7 @@
-export default function guest({ next, store }) {
+export default function auth({ next, store }) {
   if (!store.getters['user/isLogin']) {
     return next({
-      name: 'catalog',
+      name: 'signin',
     });
   }
 

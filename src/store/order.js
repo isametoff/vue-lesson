@@ -51,7 +51,6 @@ export default {
       });
 
       if (data.orderId) {
-        // localStorage.setItem('order_id', '');
         localStorage.setItem('order_id', data.orderId);
         commit('addOrderId', { data: data.orderId });
       }
@@ -90,13 +89,9 @@ export default {
 
       return res;
     },
-    async load({ commit, state, getters, rootGetters }) {
+    async load({ commit, state, getters, rootGetters, rootState }) {
       let { data, res } = await orderApi.load({
         token: rootGetters['user/valueToken'],
-      });
-      console.log('🚀 ~ file: order.js ~ line 94 ~ load ~ { data, res } ', {
-        data,
-        res,
       });
       if (data.orderId && data.orderItems.length > 0) {
         localStorage.setItem('order_id', '');

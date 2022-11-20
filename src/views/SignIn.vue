@@ -28,7 +28,7 @@
       </div>
       <div>
         <button type="button" class="btn btn-primary" @click="trySignIn">
-          Sign Up
+          Sign In
         </button>
       </div>
     </div>
@@ -42,6 +42,12 @@ export default {
   components: {},
   mounted() {
     this.cleanErrors();
+    console.log(
+      '🚀 ~ file: SignIn.vue ~ line 46 ~ trySignIn ~ this.lastNamemounted()',
+      this.all,
+      this.$route.name,
+      this.lastName
+    );
   },
   data() {
     return {
@@ -52,6 +58,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('router', ['lastName', 'all']),
     ...mapGetters('user', [
       'allAlerts',
       'isErrors',
@@ -76,7 +83,13 @@ export default {
       if (data.access_token) {
         this.data.login = '';
         this.data.password = '';
-        this.$router.push({ name: 'catalog' });
+        console.log(
+          '🚀 ~ file: SignIn.vue ~ line 81 ~ trySignIn ~ this.lastName',
+          this.all,
+          this.$route.name,
+          this.lastName
+        );
+        this.$router.push({ name: this.lastName });
       }
     },
   },

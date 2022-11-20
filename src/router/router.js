@@ -11,38 +11,41 @@ import SignUp from '@/views/SignUp';
 import CheckoutIndex from '@/views/checkout/Index';
 import CheckoutBase from '@/views/checkout/Base';
 import CheckoutOrders from '@/views/checkout/Orders';
-import CheckoutAuth from '@/views/checkout/Auth';
 
 import guest from './middleware/guest';
 import auth from './middleware/auth';
+import middlewarePipeline from './middlewarePipeline';
 
 let routes = [
   {
-    name: 'catalog',
     path: '/',
     component: AppProductsList,
+    name: 'catalog',
   },
   {
-    name: 'cart',
     path: '/cart',
     component: AppCart,
+    name: 'cart',
   },
   {
-    name: 'product',
     path: '/product/:id',
     component: AppProduct,
+    name: 'product',
   },
   {
-    name: 'signup',
     path: '/signup',
     component: SignUp,
+    name: 'signup',
+    meta: {
+      middleware: [guest],
+    },
   },
   {
-    name: 'signin',
     path: '/signin',
     component: SignIn,
+    name: 'signin',
     meta: {
-      // middleware: [auth],
+      middleware: [guest],
     },
   },
   {
@@ -66,14 +69,6 @@ let routes = [
           middleware: [auth],
         },
       },
-      // {
-      //   path: 'auth',
-      //   component: CheckoutAuth,
-      //   name: 'checkout-auth',
-      //   meta: {
-      //     middleware: [guest],
-      //   },
-      // },
     ],
   },
   {
@@ -85,6 +80,17 @@ let routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    const fromHistory = Boolean(savedPosition);
+
+    if (fromHistory && store.getters['router/isRouterHistory']) {
+      store.state.routerHistory?.splice(-1, 1);
+    } else {
+      store.dispatch('router/add', from);
+    }
+
+    return savedPosition || { x: 0, y: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {
@@ -103,17 +109,5 @@ router.beforeEach((to, from, next) => {
     next: middlewarePipeline(context, middleware, 1),
   });
 });
-
-// router.beforeEach(async (to, from, next) => {
-//   if (to.meta.auth && !auth.isLoggedIn()) {
-//     await store.getters['user/isLogin'];
-//     store.getters['user/isLogin'] ? next() : next({ name: 'signin' });
-//   } else if (to.meta.authCheckout) {
-//     await store.getters['user/isLogin'];
-//     store.getters['user/isLogin'] ? next() : next({ name: 'checkout-auth' });
-//   } else {
-//     next();
-//   }
-// });
 
 export default router;

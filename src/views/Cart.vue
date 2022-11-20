@@ -32,13 +32,13 @@
     <div class="col-4">
       <div class="card">
         <button
-          :disabled="!isToken || !isProductsCart"
+          :disabled="!isLogin || !isProductsCart"
           @click="tryCheckout()"
           class="btn btn-primary m-3"
         >
           Checkout
         </button>
-        <p class="text-center" v-if="!isToken">
+        <p class="text-center" v-if="!isLogin">
           To pay,
           <router-link :to="{ name: 'signin' }">log in </router-link>
         </p>
@@ -79,30 +79,20 @@ export default {
     ProductControls,
   },
   computed: {
-    ...mapGetters('products', ['isRest', 'maxRest']),
-    ...mapGetters('user', ['isToken']),
+    ...mapGetters('user', ['isLogin']),
     ...mapGetters('cart', {
       products: 'productsDetailed',
-      oneProductCart: 'oneProduct',
       cartTotal: 'totalCnt',
       cartSumTotal: 'totalSum',
       allProducts: 'allProducts',
       isProductsCart: 'isProductsCart',
     }),
-    cartCnt() {
-      return this.oneProduct(this.$route.params.id)
-        ? this.oneProduct(this.$route.params.id)?.cnt
-        : 0;
-    },
-    maxtCnt() {
-      return this.maxRest(this.$route.params.id, this.cartCnt);
-    },
   },
   methods: {
     ...mapActions('cart', ['setCnt']),
     ...mapActions('order', ['order', 'addOrderStore']),
     async tryCheckout() {
-      if (this.isToken && this.isProductsCart) {
+      if (this.isLogin && this.isProductsCart) {
         this.addOrderStore({ order: this.allProducts });
         let res = await this.order();
         if (res) {
