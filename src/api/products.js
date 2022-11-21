@@ -8,5 +8,5 @@ export async function all() {
     },
   });
   let products = data;
-  return products;
+  return data;
 }

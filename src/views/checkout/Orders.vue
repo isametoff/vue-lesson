@@ -15,30 +15,35 @@
               <th></th>
             </tr>
           </thead>
-          <tbody class="table-body">
-            <tr class="cell-1" v-for="(order, idx) of orderItems" :key="idx">
-              <td class="text-center">
-                <ToggleButton />
-              </td>
-              <td>#{{ order.order_id }}</td>
-              <td>{{ order.user_id }}</td>
-              <td>
-                <span v-if="order.status === 0" class="badge badge-danger">
-                  Partially shipped
-                </span>
-                <span v-if="order.status === 1" class="badge badge-info">
-                  Confirmed
-                </span>
-                <span v-if="order.status === 2" class="badge badge-success">
-                  Fullfilled
-                </span>
-              </td>
-              <td>${{ order.totalPrice }}.00</td>
-              <td>{{ order.created }}</td>
-              <Dropdown :orderId="order.orderId" :key="order.orderId" />
-            </tr>
-          </tbody>
+          <template v-if="orderItems.length > 0">
+            <tbody class="table-body">
+              <tr class="cell-1" v-for="(order, idx) of orderItems" :key="idx">
+                <td class="text-center">
+                  <ToggleButton />
+                </td>
+                <td>#{{ order.order_id }}</td>
+                <td>{{ order.user_id }}</td>
+                <td>
+                  <span v-if="order.status === 0" class="badge badge-danger">
+                    Partially shipped
+                  </span>
+                  <span v-if="order.status === 1" class="badge badge-info">
+                    Confirmed
+                  </span>
+                  <span v-if="order.status === 2" class="badge badge-success">
+                    Fullfilled
+                  </span>
+                </td>
+                <td>${{ order.totalPrice }}.00</td>
+                <td>{{ order.created }}</td>
+                <Dropdown :orderId="order.orderId" :key="order.orderId" />
+              </tr>
+            </tbody>
+          </template>
         </table>
+        <router-link v-if="orderItems.length < 1" :to="{ name: 'catalog' }"
+          >The order history is empty, select products
+        </router-link>
       </div>
     </div>
   </div>

@@ -323,7 +323,9 @@
               >order #{{ orderItem.order_id }}</span
             >
           </div>
-          <button class="btn badge d-flex mx-auto fs-1">Pay</button>
+          <button @click="tryCheckout()" class="btn badge d-flex mx-auto fs-1">
+            Pay
+          </button>
           <hr />
           <div class="main">
             <span id="sub-title">
@@ -385,7 +387,16 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions('order', ['load']),
+    ...mapActions('order', ['load', 'order', 'addOrderStore']),
+    ...mapActions('user', ['loggedIn']),
+    async tryCheckout() {
+      if (this.loggedIn) {
+        let res = await this.order();
+        if (res) {
+          this.$router.push({ name: 'checkout-orders' });
+        }
+      }
+    },
   },
 };
 </script>

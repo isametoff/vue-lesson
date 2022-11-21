@@ -19,6 +19,7 @@ export default {
     valueToken: (state) =>
       state?.token ? state.token : localStorage.getItem('access_token'),
     isToken: (state) => state.token !== '',
+    loggedIn: (getters) => (getters.valueToken != 'undefined' ? true : false),
     isLogin: (state) => (state.user?.login !== undefined ? true : false),
     loginValue: (state) => state.user?.login,
     allAlerts: (state) => state.errors,
@@ -71,8 +72,6 @@ export default {
       let { res, data } = await authApi.check({ token: getters.valueToken });
       if (res === true) {
         commit('setToken', { token: getters.valueToken });
-      }
-      if (res === true) {
         commit('setUser', data);
       }
     },

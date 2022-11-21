@@ -26,20 +26,17 @@ addResponseHandler(
     return { data: { res: true, data: response.data } };
   },
   function (error) {
-    if (error.response.data.message) {
-      store.dispatch('user/cleanData');
-      return { data: { res: 'falseee', message: error.response.data.message } };
-    }
     let config = error.response.config;
     let errorsRequest = error.response.data;
 
-    if ('errorAlert' in config) {
+    if (config && 'errorAlert' in config) {
       let { errorAlert } = config;
       store.dispatch('alerts/add', {
         text: 'Ошибка ответа от сервера ' + errorAlert.text,
         fixed: errorAlert.fixed,
       });
-      return { data: { res: false, data: data } };
+      // let errordata = data ? data : [];
+      return { data: { res: false, data: error.response.data } };
     }
 
     if (errorsRequest) {

@@ -8,7 +8,7 @@
             <h1>Site</h1>
           </div>
           <div class="col col-sm-3">
-            <div class="alert alert-default">
+            <div v-if="isProducts" class="alert alert-default">
               <div>In Cart: {{ totalCnt }}</div>
               <div>Total: {{ totalSum }}</div>
             </div>
@@ -26,19 +26,21 @@
                 >{{ item.text }}
               </router-link>
             </li>
-            <li v-for="item in menuItems" :key="item.route" class="nav-item">
-              <router-link
-                class="m-1"
-                :to="{ name: item.route }"
-                active-class="text-danger"
-                :exact="item.exact"
-                >{{ item.text }}
-              </router-link>
-            </li>
-            <li v-if="isLogin" class="nav-item mr-5">
+            <template v-if="isProducts">
+              <li v-for="item in menuItems" :key="item.route" class="nav-item">
+                <router-link
+                  class="m-1"
+                  :to="{ name: item.route }"
+                  active-class="text-danger"
+                  :exact="item.exact"
+                  >{{ item.text }}
+                </router-link>
+              </li>
+            </template>
+            <li v-if="isProducts" class="nav-item mr-5">
               Username: {{ userItems.login }}
             </li>
-            <li v-if="isLogin" class="nav-item">
+            <li v-if="isProducts" class="nav-item">
               <a @click="logOut()" href="#" class="m-1">Logout</a>
             </li>
           </ul>
@@ -70,10 +72,11 @@ export default {
     ],
   }),
   computed: {
-    ...mapGetters('cart', ['totalSum', 'totalCnt', 'inCart']),
-    ...mapGetters('user', ['userItems', 'isLogin']),
+    ...mapGetters('cart', ['totalSum', 'totalCnt']),
+    ...mapGetters('user', ['userItems', 'loggedIn']),
+    ...mapGetters('products', ['isProducts']),
     menuItems() {
-      let menu = this.isLogin
+      let menu = this.loggedIn
         ? [{ route: 'checkout', text: 'Checkout', exact: false }]
         : [
             { route: 'signin', text: 'Login', exact: false },
