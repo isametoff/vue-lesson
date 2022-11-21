@@ -90,11 +90,11 @@ export default {
   },
   methods: {
     ...mapActions('cart', ['setCnt']),
-    ...mapActions('order', ['order', 'addOrderStore']),
+    ...mapActions('order', ['add', 'addOrderStore']),
     async tryCheckout() {
       if (this.isLogin && this.isProductsCart) {
         this.addOrderStore({ order: this.allProducts });
-        let res = await this.order();
+        let res = await this.add();
         if (res) {
           this.$router.push({ name: 'checkout' });
         }

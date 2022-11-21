@@ -1,4 +1,5 @@
 import * as orderApi from '@/api/order.js';
+import getters from './cart/getters';
 
 export default {
   namespaced: true,
@@ -10,8 +11,7 @@ export default {
     totalPrice: 0,
   },
   getters: {
-    allOrderItems: (state) =>
-      state.orderStore?.length > 0 ? state.orderStore : false,
+    orderStoreItems: (state) => state.orderStore,
     isOrderStore: (state) => state.orderStore?.length > 0,
     valueOrderId: (state, getters) =>
       state.orderId
@@ -44,11 +44,28 @@ export default {
     },
   },
   actions: {
+    async add({ commit, rootGetters, getters, rootState }) {
+      let { data, res } = await orderApi.add({
+        token: rootGetters['user/valueToken'],
+        order: getters.orderStoreItems,
+      });
+
+      if (data.orderId) {
+        localStorage.setItem('order_id', data.orderId);
+        commit('addOrderId', { data: data.orderId });
+      }
+      if (res === true) {
+        commit('addOrderStore', []);
+      }
+
+      return res;
+    },
     async order({ commit, rootGetters, getters, rootState }) {
       let { data, res } = await orderApi.order({
         token: rootGetters['user/valueToken'],
-        order: getters.allOrderItems,
+        orderId: getters.orderItem.order_id,
       });
+      console.log("🚀 ~ file: order.js ~ line 68 ~ order ~ { data, res }", { data, res })
 
       if (data.orderId) {
         localStorage.setItem('order_id', data.orderId);
@@ -93,6 +110,7 @@ export default {
       let { data, res } = await orderApi.load({
         token: rootGetters['user/valueToken'],
       });
+      console.log("🚀 ~ file: order.js ~ line 113 ~ load ~ { data, res }", { data, res })
       if (data.orderId && data.orderItems.length > 0) {
         localStorage.setItem('order_id', '');
         localStorage.setItem('order_id', data.orderId);

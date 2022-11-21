@@ -1,6 +1,6 @@
 import http from '@/api/http';
 
-export async function order({ token, order }) {
+export async function add({ token, order }) {
   const config = {
     headers: {
       Authorization: 'Bearer ' + token,
@@ -8,7 +8,20 @@ export async function order({ token, order }) {
     },
   };
 
-  let { data } = await http.post('order', { order }, config);
+  let { data } = await http.post('order/adding', { order }, config);
+
+  return data;
+}
+export async function order({ token, orderId }) {
+  console.log('🚀 ~ file: order.js ~ line 16 ~ order ~ orderId', orderId);
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  let { data } = await http.post('order', { orderId }, config);
 
   return data;
 }
