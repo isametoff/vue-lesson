@@ -12,10 +12,17 @@
         style="inset: 0px 10px auto auto"
       >
         <li>
-          <a @click="tryDeleteOrder()" class="dropdown-item" href="#">Delete</a>
+          <a @click="tryCancelled()" class="dropdown-item" href="#"
+            >Cancelled</a
+          >
         </li>
         <li>
-          <a @click="tryCheckout()" class="dropdown-item" href="#">Repeat</a>
+          <a @click="tryDelete()" class="dropdown-item" href="#">Delete</a>
+        </li>
+        <li>
+          <a @click="tryRepeat()" class="dropdown-item" href="#"
+            >Repeat{{ orderId }}</a
+          >
         </li>
       </ul>
     </div>
@@ -35,27 +42,23 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapActions('order', ['repeatOrder', 'deleteOrder', 'loadAll']),
+    ...mapActions('order', [
+      'repeatOrder',
+      'deleteOrder',
+      'cancelled',
+      'loadAll',
+    ]),
     toShow() {
       this.showDropdown = !this.showDropdown;
     },
-    async tryCheckout() {
-      if (this.orderId) {
-        let res = await this.repeatOrder({ orderId: this.orderId });
-        this.toShow();
-        if (res) {
-          this.loadAll();
-        }
-      }
+    tryRepeat() {
+      this.repeatOrder({ orderId: this.orderId });
     },
-    async tryDeleteOrder() {
-      if (this.orderId) {
-        let res = await this.deleteOrder({ orderId: this.orderId });
-        this.toShow();
-        if (res) {
-          this.loadAll();
-        }
-      }
+    tryDelete() {
+      this.deleteOrder({ orderId: this.orderId });
+    },
+    tryCancelled() {
+      this.cancelled({ orderId: this.orderId });
     },
   },
 };

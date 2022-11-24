@@ -37,6 +37,19 @@ export async function repeat({ token, orderId }) {
 
   return data;
 }
+export async function cancelled({ token, orderId }) {
+  const config = {
+    headers: {
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+
+  let { data } = await http.post('order/cancel', { orderId }, config);
+  console.log("🚀 ~ file: order.js ~ line 49 ~ cancelled ~ { data }", { data })
+
+  return data;
+}
 export async function deleteOrder({ token, orderId }) {
   const config = {
     headers: {

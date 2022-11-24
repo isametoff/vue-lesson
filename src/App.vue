@@ -37,10 +37,10 @@
                 </router-link>
               </li>
             </template>
-            <li v-if="isProducts" class="nav-item mr-5">
+            <li v-if="isLogin" class="nav-item mr-5">
               Username: {{ userItems.login }}
             </li>
-            <li v-if="isProducts" class="nav-item">
+            <li v-if="isLogin" class="nav-item">
               <a @click="logOut()" href="#" class="m-1">Logout</a>
             </li>
           </ul>
@@ -73,10 +73,10 @@ export default {
   }),
   computed: {
     ...mapGetters('cart', ['totalSum', 'totalCnt']),
-    ...mapGetters('user', ['userItems', 'loggedIn']),
+    ...mapGetters('user', ['userItems', 'loggedIn','isLogin']),
     ...mapGetters('products', ['isProducts']),
     menuItems() {
-      let menu = this.loggedIn
+      let menu = this.isLogin
         ? [{ route: 'checkout', text: 'Checkout', exact: false }]
         : [
             { route: 'signin', text: 'Login', exact: false },

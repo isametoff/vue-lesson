@@ -1,5 +1,5 @@
 import * as orderApi from '@/api/order.js';
-import getters from './cart/getters';
+import router from '@/router/router';
 
 export default {
   namespaced: true,
@@ -65,7 +65,10 @@ export default {
         token: rootGetters['user/valueToken'],
         orderId: getters.orderItem.order_id,
       });
-      console.log("🚀 ~ file: order.js ~ line 68 ~ order ~ { data, res }", { data, res })
+      console.log('🚀 ~ file: order.js ~ line 68 ~ order ~ { data, res }', {
+        data,
+        res,
+      });
 
       if (data.orderId) {
         localStorage.setItem('order_id', data.orderId);
@@ -81,6 +84,7 @@ export default {
       { commit, rootGetters, getters, rootState },
       { orderId }
     ) {
+      console.log('🚀 ~ file: order.js ~ line 87 ~ { orderId }', orderId);
       let { res } = await orderApi.repeat({
         orderId: orderId,
         token: rootGetters['user/valueToken'],
@@ -88,6 +92,7 @@ export default {
 
       if (res === true) {
         commit('addOrderStore', []);
+        router.push({ name: 'checkout' });
       }
 
       return res;
@@ -101,7 +106,24 @@ export default {
         token: rootGetters['user/valueToken'],
       });
 
+      console.log(
+        '🚀 ~ file: order.js ~ line 110 ~ res === true',
+        res === true
+      );
       if (res === true) {
+        this.loadAll;
+      }
+
+      return res;
+    },
+    async cancelled({ commit, rootGetters, rootState, dispatch }, { orderId }) {
+      let { res } = await orderApi.cancelled({
+        orderId: orderId,
+        token: rootGetters['user/valueToken'],
+      });
+
+      if (res === true) {
+        this.loadAll;
       }
 
       return res;
@@ -110,7 +132,7 @@ export default {
       let { data, res } = await orderApi.load({
         token: rootGetters['user/valueToken'],
       });
-      console.log("🚀 ~ file: order.js ~ line 113 ~ load ~ { data, res }", { data, res })
+
       if (data.orderId && data.orderItems.length > 0) {
         localStorage.setItem('order_id', '');
         localStorage.setItem('order_id', data.orderId);
@@ -125,6 +147,10 @@ export default {
       return res;
     },
     async loadAll({ commit, state, getters, rootGetters }) {
+      console.log(
+        "🚀 ~ file: order.js ~ line 153 ~ loadAll ~ rootGetters['user/valueToken'",
+        rootGetters['user/valueToken']
+      );
       let { data, res } = await orderApi.loadAll({
         token: rootGetters['user/valueToken'],
       });

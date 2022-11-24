@@ -67,7 +67,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('order', ['orderItems']),
+    ...mapGetters('order', ['orderItems']), 
   },
   methods: {
     ...mapActions('order', ['loadAll']),
